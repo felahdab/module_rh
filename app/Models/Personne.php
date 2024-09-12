@@ -3,12 +3,12 @@
 namespace Modules\RH\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Modules\RH\Traits\HasTablePrefix;
 
-use App\Models\User;
-
-class Personne extends User
+class Personne
 {
     use HasUuids; 
+    use HasTablePrefix;
 
     protected $primaryKey = 'uuid';
 
