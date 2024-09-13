@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\RH\Modules\RH\Database\Seeders;
+namespace Modules\RH\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
@@ -11,6 +11,8 @@ class RHDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+        $this->call([
+            GradeSeeder::class
+        ]);
     }
 }
