@@ -12,7 +12,8 @@ class RHDatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            GradeSeeder::class
+            GradeSeeder::class,
+            BrevetSeeder::class,
         ]);
     }
 }

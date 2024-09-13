@@ -5,7 +5,7 @@ namespace Modules\RH\Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-use Modules\RH\Models\Diplome;
+use Modules\RH\Models\Brevet;
 
 class BrevetSeeder extends Seeder
 {
@@ -16,35 +16,35 @@ class BrevetSeeder extends Seeder
      */
     public function run()
     {
-        Diplome::create([
-			'id'             => 1,
-			'diplome_libcourt' => 'BE',
-			'diplome_liblong'  => 'Brevet élémentaire',
-			'ordre_classmt'  => 1,
+        Brevet::create([
+			'id'             => "9d00229a-1e2e-480b-9119-f5cdce3d53e0",
+			'libelle_court' => 'BE',
+			'libelle_long'  => 'Brevet élémentaire',
+			'ordre'  => 1,
         ]);
-		Diplome::create([
-			'id'             => 2,
-			'diplome_libcourt' => 'BAT',
-			'diplome_liblong'  => 'Brevet d\'aptitude technique',
-			'ordre_classmt'  => 2,
+		Brevet::create([
+			'id'             => "9d00229a-2193-4c9c-ab57-dfdf8eb2840b",
+			'libelle_court' => 'BAT',
+			'libelle_long'  => 'Brevet d\'aptitude technique',
+			'ordre'  => 2,
         ]);
-		Diplome::create([
-			'id'             => 3,
-			'diplome_libcourt' => 'BS',
-			'diplome_liblong'  => 'Brevet supérieur',
-			'ordre_classmt'  => 3,
+		Brevet::create([
+			'id'             => "9d00229a-21f3-458b-80ae-1dd7d69bc3c7",
+			'libelle_court' => 'BS',
+			'libelle_long'  => 'Brevet supérieur',
+			'ordre'  => 3,
         ]);
-		Diplome::create([
-			'id'             => 4,
-			'diplome_libcourt' => 'BM',
-			'diplome_liblong'  => 'Brevet de maitrise',
-			'ordre_classmt'  => 4,
+		Brevet::create([
+			'id'             => "9d00229a-2252-422c-8e4a-dab0f4c45f5f",
+			'libelle_court' => 'BM',
+			'libelle_long'  => 'Brevet de maitrise',
+			'ordre'  => 4,
         ]);
-		Diplome::create([
-			'id'             => 5,
-			'diplome_libcourt' => 'OFF',
-			'diplome_liblong'  => 'Officier',
-			'ordre_classmt'  => 5,
+		Brevet::create([
+			'id'             => "9d00229a-22ac-4978-a07d-ab40d798211c",
+			'libelle_court' => 'OFF',
+			'libelle_long'  => 'Officier',
+			'ordre'  => 5,
         ]);
     }
 }
