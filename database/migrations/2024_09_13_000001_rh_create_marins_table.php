@@ -21,11 +21,11 @@ return new class extends Migration
             $table->string('nid', 15)->nullable(true)->default("");
             $table->date('date_embarq')->nullable(true);
             $table->date('date_debarq')->nullable(true);
-            $table->foreignUuid('grade_id')->references('id')->on('rh_grades')->nullable(true);
-            $table->foreignUuid('specialite_id')->references('id')->on('rh_specialites')->nullable(true);
-            $table->foreignUuid('brevet_id')->references('id')->on('rh_brevets')->nullable(true);
-            $table->foreignUuid('secteur_id')->references('id')->on('rh_secteurs')->nullable(true);
-            $table->foreignUuid('unite_id')->references('id')->on('rh_unites')->nullable(true);
+            $table->uuid('grade_id')->nullable(true);
+            $table->uuid('specialite_id')->nullable(true);
+            $table->uuid('brevet_id')->nullable(true);
+            $table->uuid('secteur_id')->nullable(true);
+            $table->uuid('unite_id')->nullable(true);
             $table->json('data')->nullable();
             $table->timestamps();
             $table->softDeletes();

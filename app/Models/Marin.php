@@ -11,4 +11,20 @@ class Marin extends Model
 {
     use HasUuids; 
     use HasTablePrefix;
+
+    protected $fillable = [
+        'id',
+        'nom',
+        'prenom',
+        'matricule',
+        'nid',
+        'date_embarq',
+        'date_debarq',
+        'grade_id',
+        'specialite_id',
+        'brevet_id',
+        'secteur_id',
+        'unite_id',
+        'data',
+    ];
 }

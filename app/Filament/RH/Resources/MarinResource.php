@@ -38,19 +38,14 @@ class MarinResource extends Resource
                 Forms\Components\DatePicker::make('date_embarq'),
                 Forms\Components\DatePicker::make('date_debarq'),
                 Forms\Components\TextInput::make('grade_id')
-                    ->required()
                     ->maxLength(36),
                 Forms\Components\TextInput::make('specialite_id')
-                    ->required()
                     ->maxLength(36),
                 Forms\Components\TextInput::make('brevet_id')
-                    ->required()
                     ->maxLength(36),
                 Forms\Components\TextInput::make('secteur_id')
-                    ->required()
                     ->maxLength(36),
                 Forms\Components\TextInput::make('unite_id')
-                    ->required()
                     ->maxLength(36),
                 Forms\Components\Textarea::make('data')
                     ->columnSpanFull(),
