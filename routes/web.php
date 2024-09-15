@@ -15,5 +15,5 @@ use Modules\RH\Http\Controllers\RHController;
 */
 
 // Route::group([], function () {
-//     Route::resource('rh', RHController::class)->names('rh');
+//     Route::view('tata', 'toto');
 // });

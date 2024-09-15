@@ -15,5 +15,5 @@ use Modules\RH\Http\Controllers\RHController;
 */
 
 // Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-//     Route::apiResource('rh', RHController::class)->names('rh');
+//     Route::view('toto', 'toto');
 // });
