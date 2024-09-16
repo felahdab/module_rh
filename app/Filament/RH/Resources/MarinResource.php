@@ -101,6 +101,12 @@ class MarinResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('associer-a-un-utilisateur')
+                    ->requiresConfirmation()
+                    ->action(function()
+                    {
+                        ddd("TODO: doit demander a selectionner un utilisqteur puis inscrire dans record->data->rh->local_user_id le id du user designe");
+                    })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
