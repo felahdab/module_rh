@@ -36,7 +36,7 @@ class RHPanelProvider extends PanelProvider
     {
         $moduleNamespace = $this->getModuleNamespace();
         return $panel
-            ->id('rh::rh')
+            ->id('RH')
             ->path($this->prefix . '/rh')
             ->colors([
                 'primary' => Color::Teal,
