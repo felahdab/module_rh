@@ -27,4 +27,11 @@ class Marin extends Model
         'unite_id',
         'data',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'data' => 'array',
+        ];
+    }
 }
