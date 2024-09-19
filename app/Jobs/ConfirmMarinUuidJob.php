@@ -13,7 +13,7 @@ use App\Jobs\Middleware\RateLimited;
 use App\Models\Setting;
 
 use Modules\RH\Http\Integrations\Connectors\CentralRHServerConnector;
-use Modules\RH\Http\Integrations\Requests\RetreiveMarinUuid;
+use Modules\RH\Http\Integrations\Requests\RetreiveMarinByNID;
 use Modules\RH\Models\Marin;
 
 class ConfirmMarinUuidJob implements ShouldQueue
@@ -45,14 +45,14 @@ class ConfirmMarinUuidJob implements ShouldQueue
         $token = $settings->get('token_for_remote_rh_instance');
         
         $server = new CentralRHServerConnector($url, $token);
-        $request = new RetreiveMarinUuid($marin->nid);
+        $request = new RetreiveMarinByNID($marin->nid);
 
         $response = $server->send($request);
 
         if ($response->successful())
         {
             $json = $response->json();
-            $uuid = $json["uuid"];
+            $uuid = $json["id"];
             $marin->uuid = $uuid;
             $data = $marin->data;
             Arr::set($data, "status", "uuid_confirmed");

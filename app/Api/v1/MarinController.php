@@ -25,19 +25,19 @@ class MarinController extends Controller
      */
      public function index(Request $request)
      {
-     $request->validate([
-          /**
-           * Le NID du marin recherché
-          * @example "0012030028"
-          */
-          'filter[nid]' => 'string',
-     ]);
-          
-     $users = QueryBuilder::for(Marin::select(["id", "nom", "prenom", "nid"]))
-          ->allowedFilters('nid')
-          ->get();
+          $request->validate([
+               /**
+                * Le NID du marin recherché
+               * @example "0012030028"
+               */
+               'filter[nid]' => 'string',
+          ]);
+               
+          $users = QueryBuilder::for(Marin::select(["id", "nom", "prenom", "nid"]))
+               ->allowedFilters('nid')
+               ->get();
 
-     return $users;
+          return $users;
      }
 
      /**
@@ -57,26 +57,26 @@ class MarinController extends Controller
           return $marin->only(["id", "nom", "prenom", "nid"]);
      }
 
-     public function get_marin_uuid(ApiGetMarinUuidRequest $request)
-     {
-     $marin = null;
+     // public function get_marin_uuid(ApiGetMarinUuidRequest $request)
+     // {
+     //      $marin = null;
 
-     if ($request->has('email')){
-          $marin = Marin::select(["id", "nom", "prenom", "nid"])
-                    ->where('email', $request->input('email'))->get();
-     }
-     elseif ($request->has('nid')){
-          $marin = Marin::select(["id", "nom", "prenom", "nid"])
-                    ->where('nid', $request->input('nid'))->get();
-     }
+     //      if ($request->has('email')){
+     //           $marin = Marin::select(["id", "nom", "prenom", "nid"])
+     //                     ->where('email', $request->input('email'))->get();
+     //      }
+     //      elseif ($request->has('nid')){
+     //           $marin = Marin::select(["id", "nom", "prenom", "nid"])
+     //                     ->where('nid', $request->input('nid'))->get();
+     //      }
 
-     if ($marin != null)
-     {
-          return $marin;
-     }
+     //      if ($marin != null)
+     //      {
+     //           return $marin;
+     //      }
 
-     return response("marin non trouve", 400);
-     }
+     //      return response("marin non trouve", 400);
+     // }
 
  
 }
