@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\RH\Http\Controllers\RHController;
-
+use Modules\RH\Api\v1\MarinController;
 /*
  *--------------------------------------------------------------------------
  * API Routes
@@ -14,6 +13,10 @@ use Modules\RH\Http\Controllers\RHController;
  *
 */
 
-// Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
+Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 //     Route::view('toto', 'toto');
-// });
+    Route::get('marins', [MarinController::class, 'index']);
+    Route::post('marin', [MarinController::class, 'store']);
+
+    Route::get('get_marin_uuid', [MarinController::class, 'get_marin_uuid']);
+});
