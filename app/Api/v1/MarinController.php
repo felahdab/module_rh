@@ -15,7 +15,9 @@ use Modules\RH\Api\v1\Requests\StoreMarinRequest;
 
 use Modules\RH\Models\Marin;
 
-
+/**
+ * @tags Module RH: Marin
+ */
 class MarinController extends Controller
 {
 
@@ -56,27 +58,5 @@ class MarinController extends Controller
 
           return $marin->only(["id", "nom", "prenom", "nid"]);
      }
-
-     // public function get_marin_uuid(ApiGetMarinUuidRequest $request)
-     // {
-     //      $marin = null;
-
-     //      if ($request->has('email')){
-     //           $marin = Marin::select(["id", "nom", "prenom", "nid"])
-     //                     ->where('email', $request->input('email'))->get();
-     //      }
-     //      elseif ($request->has('nid')){
-     //           $marin = Marin::select(["id", "nom", "prenom", "nid"])
-     //                     ->where('nid', $request->input('nid'))->get();
-     //      }
-
-     //      if ($marin != null)
-     //      {
-     //           return $marin;
-     //      }
-
-     //      return response("marin non trouve", 400);
-     // }
-
  
 }
