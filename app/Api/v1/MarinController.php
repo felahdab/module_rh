@@ -54,6 +54,7 @@ class MarinController extends Controller
                return response("Un marin avec ce NID existe deja", 400);
           }
 
+          Log::info("API: creating marin with : " . json_encode($request->validated(), JSON_PRETTY_PRINT));
           $marin = Marin::create($request->validated());
 
           return $marin->only(["id", "nom", "prenom", "nid"]);

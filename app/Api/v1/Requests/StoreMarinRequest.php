@@ -12,9 +12,10 @@ class StoreMarinRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "nom" => "string|required",
-            "prenom" => "string|required",
-            "nid" => "string|required"
+            "id"      => "string|required",
+            "nom"     => "string|required",
+            "prenom"  => "string|required",
+            "nid"     => "string|required",
         ];
     }
 

@@ -12,6 +12,7 @@ class RHDatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            SettingSeeder::class,
             GradeSeeder::class,
             BrevetSeeder::class,
         ]);

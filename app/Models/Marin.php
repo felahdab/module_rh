@@ -7,7 +7,11 @@ use Modules\RH\Traits\HasTablePrefix;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
+
+use Modules\RH\Jobs\ConfirmMarinUuidJob;
 
 class Marin extends Model
 {
@@ -42,6 +46,9 @@ class Marin extends Model
         static::creating(function (Marin $marin) {
             $data = ["status" => "pending_uuid_confirmation"];
             $marin->data = $data;
+
+            Log::info("Creating marin with id: " . $marin->id);
+            ConfirmMarinUuidJob::dispatch($marin->id);
         });
     }
 }

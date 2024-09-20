@@ -15,6 +15,6 @@ class RetreiveMarinByNID extends Request
 
     public function resolveEndpoint(): string
     {
-        return '/rh/v1/marins';
+        return '/api/rh/v1/marins';
     }
 }
