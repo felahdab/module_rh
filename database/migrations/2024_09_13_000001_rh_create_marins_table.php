@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nom');
             $table->string('prenom');
             $table->string('matricule', 20)->nullable(true)->default("");
-            $table->string('nid', 15)->nullable(true)->default("");
+            $table->string('nid', 15)->nullable(true)->default("")->unique();
             $table->date('date_embarq')->nullable(true);
             $table->date('date_debarq')->nullable(true);
             $table->uuid('grade_id')->nullable(true);

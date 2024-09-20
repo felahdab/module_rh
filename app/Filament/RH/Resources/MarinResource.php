@@ -13,6 +13,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+use Modules\RH\Jobs\ConfirmMarinUuidJob;
+
 class MarinResource extends Resource
 {
     protected static ?string $model = Marin::class;
@@ -106,7 +108,12 @@ class MarinResource extends Resource
                     ->action(function()
                     {
                         ddd("TODO: doit demander a selectionner un utilisqteur puis inscrire dans record->data->rh->local_user_id le id du user designe");
-                    })
+                    }),
+                Tables\Actions\Action::make('verifier-avec-serveur-distant')
+                    ->action(function(Marin $record)
+                    {
+                        ConfirmMarinUuidJob::dispatch($record->id);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

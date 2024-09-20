@@ -37,11 +37,15 @@ class ConfirmMarinUuidJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::info("Handling marin uuid retreival");
+        Log::warning("Handling marin uuid retreival :" . $this->id . ' ' . tenant()->id);
         $marin = Marin::find($this->id);
-        Log::info($marin->only(["id", "nom", "prenom", "nid"]));
+        if (is_null($marin))
+        {
+            $this->fail("The provided id does not correspond to a valid marin record.");
+        }
+        dump($marin->data);
 
-        if ($marin->data["status"] == "uuid_confirmed")
+        if (Arr::get($marin->data, "status") == "uuid_confirmed")
         {
             Log::info("UUID is already confirmed. End of job.");
             return;
@@ -58,6 +62,8 @@ class ConfirmMarinUuidJob implements ShouldQueue
             $marin->data = $data;
 
             $marin->save();
+            Log::info("UUID confirmed.");
+
             return ;
         }
 
@@ -76,7 +82,7 @@ class ConfirmMarinUuidJob implements ShouldQueue
             $json = $response->json();
 
             if (count($json) > 1){
-                throw new Exception("Le serveur RH distant a renvoyé plusieurs marins avec le même NID.");
+                $this->fail("Le serveur RH distant a renvoyé plusieurs marins avec le même NID.");
             }
 
             if (count($json) == 0){
@@ -115,9 +121,7 @@ class ConfirmMarinUuidJob implements ShouldQueue
             return;
         }
         
-        $response->throw();
-
-        return;
+        $this->fail("Le serveur RH distant a répondu avec une erreur.");
 
     }
 
