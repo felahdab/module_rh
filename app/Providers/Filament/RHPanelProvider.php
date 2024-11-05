@@ -43,6 +43,7 @@ class RHPanelProvider extends PanelProvider
             ])
             ->font('Inter', provider: SpatieGoogleFontProvider::class)
             ->defaultAvatarProvider(AnnudefAvatarProvider::class)
+            ->brandName("Ressources humaines")
             ->discoverResources(in: module_path($this->module, 'app/Filament/RH/Resources'), for: "$moduleNamespace\\Filament\\RH\\Resources")
             ->discoverPages(in: module_path($this->module, 'app/Filament/RH/Pages'), for: "$moduleNamespace\\Filament\\RH\\Pages")
             ->pages([
@@ -50,8 +51,8 @@ class RHPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: module_path($this->module, 'app/Filament/RH/Widgets'), for: "$moduleNamespace\\Filament\\RH\\Widgets")
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                // Widgets\AccountWidget::class,
+                // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
