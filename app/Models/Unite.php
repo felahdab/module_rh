@@ -12,6 +12,14 @@ class Unite extends Model
 {
     use HasFactory;
 	use HasTablePrefix;
+
+	protected $fillable = [
+		'libelle_court', 
+		'libelle_long', 
+		'ordre',
+		'id',
+		'uuid',
+	];
 	
 	public function users()
 	{

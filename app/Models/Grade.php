@@ -13,7 +13,15 @@ class Grade extends Model
 {
     use HasFactory;
 	use HasTablePrefix;
-	use HasUuids;
+
+	protected $fillable = [
+		"id",
+		"uuid",
+		"libelle_long",
+		"libelle_court",
+		"ordre",
+		"data"
+	];
 	
 	public function users()
 	{

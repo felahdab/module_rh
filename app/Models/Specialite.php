@@ -12,4 +12,13 @@ class Specialite extends Model
 {
     use HasFactory;
     use HasTablePrefix;
+
+    protected $fillable = [
+        'id',
+        'uuid',
+        'libelle_long',
+        'libelle_court',
+        'data',
+        'ordre'
+    ];
 }
