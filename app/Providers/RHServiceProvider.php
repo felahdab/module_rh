@@ -4,6 +4,23 @@ namespace Modules\RH\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
+
+use Modules\RH\Models\Brevet;
+use Modules\RH\Policies\BrevetPolicy;
+
+use Modules\RH\Models\Grade;
+use Modules\RH\Policies\GradePolicy;
+
+use Modules\RH\Models\Marin;
+use Modules\RH\Policies\MarinPolicy;
+
+use Modules\RH\Models\Specialite;
+use Modules\RH\Policies\SpecialitePolicy;
+
+use Modules\RH\Models\Unite;
+use Modules\RH\Policies\UnitePolicy;
+
 
 class RHServiceProvider extends ServiceProvider
 {
@@ -30,6 +47,23 @@ class RHServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->registerPolicies();
+    }
+
+    public function registerPolicies()
+    {
+        $policies = [
+            Brevet::class => BrevetPolicy::class,
+            Grade::class => GradePolicy::class,
+            Marin::class => MarinPolicy::class,
+            Specialite::class => SpecialitePolicy::class,
+            Unite::class => UnitePolicy::class,
+
+
+        ];
+        foreach ($policies as $model => $policy){
+            Gate::policy($model, $policy);
+        }
     }
 
     /**
