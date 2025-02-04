@@ -74,12 +74,21 @@ class Marin extends Model
         return $this->belongsTo(Unite::class, "unite_id", "id");
     }
 
-    public function setUser(?User $user)
+    public function setUser(?User $user, bool $dissociate_others = true)
     {
-        $data = $this->data;
 
         $user_id = $user ? $user->id : null;
 
+        if ($user_id != null && $dissociate_others)
+        {
+            static::where("data->rh->user_id", $user_id)
+                ->get()
+                ->each(function(Marin $marin){
+                    $marin->setUser(null);
+                });
+        }
+
+        $data = $this->data;
         Arr::set($data, "rh.user_id", $user_id);
         $this->data = $data;
         $this->save();
