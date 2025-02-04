@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use Modules\RH\Traits\HasTablePrefix;
 
+use Modules\RH\Models\Marin;
 
 class Unite extends Model
 {
@@ -14,20 +15,15 @@ class Unite extends Model
 	use HasTablePrefix;
 
 	protected $fillable = [
+		'id',
+		'uuid',
 		'libelle_court', 
 		'libelle_long', 
 		'ordre',
-		'id',
-		'uuid',
 	];
 	
-	public function users()
+	public function marins()
 	{
-		return $this->hasMany(User::class);
-	}
-	
-	public function destination_users()
-	{
-		return $this->hasMany(User::class, 'unite_destination_id');
+		return $this->hasMany(Marin::class);
 	}
 }

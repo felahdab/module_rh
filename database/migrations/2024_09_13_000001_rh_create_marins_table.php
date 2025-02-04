@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use Illuminate\Support\Facades\DB;
+
 return new class extends Migration
 {
     /**
@@ -13,19 +15,28 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('rh_marins', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+        $default_value = "";
+
+        if (DB::connection() instanceof \Illuminate\Database\PostgresConnection) {
+            $default_value = DB::raw('(gen_random_uuid())');
+        }
+        elseif (DB::connection() instanceof \Illuminate\Database\MySqlConnection){
+            $default_value = DB::raw('(UUID())');
+        }
+
+        Schema::create('rh_marins', function (Blueprint $table) use ($default_value){
+            $table->id('id');
+            $table->uuid('uuid')->default($default_value);
             $table->string('nom');
             $table->string('prenom');
             $table->string('matricule', 20)->nullable(true)->default("");
             $table->string('nid', 15)->nullable(true)->default("")->unique();
             $table->date('date_embarq')->nullable(true);
             $table->date('date_debarq')->nullable(true);
-            $table->uuid('grade_id')->nullable(true);
-            $table->uuid('specialite_id')->nullable(true);
-            $table->uuid('brevet_id')->nullable(true);
-            $table->uuid('secteur_id')->nullable(true);
-            $table->uuid('unite_id')->nullable(true);
+            $table->foreignId('grade_id')->references('id')->on('rh_grades')->nullable(true);
+            $table->foreignId('specialite_id')->references('id')->on('rh_specialites')->nullable(true);
+            $table->foreignId('brevet_id')->references('id')->on('rh_brevets')->nullable(true);
+            $table->foreignId('unite_id')->references('id')->on('rh_unites')->nullable(true);
             $table->json('data')->nullable();
             $table->timestamps();
             $table->softDeletes();

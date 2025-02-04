@@ -2,11 +2,9 @@
 
 namespace Modules\RH\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Modules\RH\Traits\HasTablePrefix;
 use Illuminate\Database\Eloquent\Model;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
@@ -15,11 +13,11 @@ use Modules\RH\Jobs\ConfirmMarinUuidJob;
 
 class Marin extends Model
 {
-    use HasUuids; 
     use HasTablePrefix;
 
     protected $fillable = [
         'id',
+        'uuid',
         'nom',
         'prenom',
         'matricule',
@@ -29,7 +27,6 @@ class Marin extends Model
         'grade_id',
         'specialite_id',
         'brevet_id',
-        'secteur_id',
         'unite_id',
         'data',
     ];
@@ -46,9 +43,32 @@ class Marin extends Model
         static::creating(function (Marin $marin) {
             $data = ["status" => "pending_uuid_confirmation"];
             $marin->data = $data;
-
-            Log::info("Creating marin with id: " . $marin->id);
-            ConfirmMarinUuidJob::dispatch($marin->id);
         });
+
+        static::created(function (Marin $marin) {   
+            $marin->refresh();
+            Log::info("Creating marin with uuid: " . $marin->uuid);
+            ConfirmMarinUuidJob::dispatch($marin->uuid);
+        });
+    }
+
+    public function grade()
+    {
+        return $this->belongsTo(Grade::class, "grade_id", "id");
+    }
+
+    public function specialite()
+    {
+        return $this->belongsTo(Specialite::class, "specialite_id", "id");
+    }
+
+    public function brevet()
+    {
+        return $this->belongsTo(Brevet::class, "brevet_id", "id");
+    }
+
+    public function unite()
+    {
+        return $this->belongsTo(Unite::class, "unite_id", "id");
     }
 }

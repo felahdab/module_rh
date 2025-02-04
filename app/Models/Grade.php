@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 
 use Modules\RH\Traits\HasTablePrefix;
+use Modules\RH\Models\Marin;
 
 class Grade extends Model
 {
@@ -23,8 +24,8 @@ class Grade extends Model
 		"data"
 	];
 	
-	public function users()
+	public function marins()
 	{
-		return $this->hasMany(User::class);
+		return $this->hasMany(Marin::class, "grade_id", "uuid");
 	}
 }

@@ -39,16 +39,14 @@ class MarinResource extends Resource
                     ->default(''),
                 Forms\Components\DatePicker::make('date_embarq'),
                 Forms\Components\DatePicker::make('date_debarq'),
-                Forms\Components\TextInput::make('grade_id')
-                    ->maxLength(36),
-                Forms\Components\TextInput::make('specialite_id')
-                    ->maxLength(36),
-                Forms\Components\TextInput::make('brevet_id')
-                    ->maxLength(36),
-                Forms\Components\TextInput::make('secteur_id')
-                    ->maxLength(36),
-                Forms\Components\TextInput::make('unite_id')
-                    ->maxLength(36),
+                Forms\Components\Select::make('grade_id')
+                    ->relationship(name: 'grade', titleAttribute: 'libelle_long'),
+                Forms\Components\Select::make('specialite_id')
+                    ->relationship(name: 'specialite', titleAttribute: 'libelle_court'),
+                Forms\Components\Select::make('brevet_id')
+                    ->relationship(name: 'brevet', titleAttribute: 'libelle_long'),
+                Forms\Components\Select::make('unite_id')
+                    ->relationship(name: 'unite', titleAttribute: 'libelle_long'),
                 Forms\Components\Textarea::make('data')
                     ->columnSpanFull(),
             ]);

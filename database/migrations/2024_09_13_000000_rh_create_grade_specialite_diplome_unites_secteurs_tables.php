@@ -64,38 +64,6 @@ return new class extends Migration
             $table->json('data')->nullable();
         });
 		
-        Schema::create('rh_groupements', function (Blueprint $table) use ($default_value) {
-            $table->id();
-            $table->uuid('uuid')->default($default_value);
-            $table->timestamps();
-            $table->string('libelle_court', 10)->nullable(false)->default("");
-            $table->string('libelle_long', 100)->nullable(false)->default("");
-            $table->integer('ordre')->nullable(false)->default(0);
-            $table->json('data')->nullable();
-        });
-		
-		Schema::create('rh_services', function (Blueprint $table) use ($default_value) {
-            $table->id();
-            $table->uuid('uuid')->default($default_value);
-            $table->timestamps();
-            $table->string('libelle_court', 10)->nullable(false)->default("");
-            $table->string('libelle_long', 100)->nullable(false)->default("");
-            $table->foreignId('groupement_id')->references('id')->on('rh_groupements')->onDelete('cascade');
-            $table->integer('ordre')->nullable(false)->default(0);
-            $table->json('data')->nullable();
-        });
-		
-        Schema::create('rh_secteurs', function (Blueprint $table) use ($default_value) {
-            $table->id();
-            $table->uuid('uuid')->default($default_value);
-            $table->timestamps();
-            $table->string('libelle_court', 10)->nullable(false)->default("");
-            $table->string('libelle_long', 100)->nullable(false)->default("");
-            $table->foreignId('service_id')->references('id')->on('rh_services')->onDelete('cascade');
-            $table->integer('ordre')->nullable(false)->default(0);
-            $table->json('data')->nullable();
-        });
-		
     }
 
     /**
