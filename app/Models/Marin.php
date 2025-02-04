@@ -7,15 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 use App\Models\User;
 
 use Modules\RH\Traits\HasTablePrefix;
 use Modules\RH\Jobs\ConfirmMarinUuidJob;
+use Modules\RH\Database\Factories\MarinFactory;
+
 
 class Marin extends Model
 {
     use HasTablePrefix;
+    use HasFactory;
 
     protected $fillable = [
         'id',
@@ -38,6 +43,11 @@ class Marin extends Model
         return [
             'data' => AsArrayObject::class,
         ];
+    }
+
+    protected static function newFactory(): MarinFactory
+    {
+        return MarinFactory::new();
     }
 
     protected static function booted(): void
