@@ -33,10 +33,10 @@ return new class extends Migration
             $table->string('nid', 15)->nullable(true)->default("")->unique();
             $table->date('date_embarq')->nullable(true);
             $table->date('date_debarq')->nullable(true);
-            $table->foreignId('grade_id')->references('id')->on('rh_grades')->nullable(true);
-            $table->foreignId('specialite_id')->references('id')->on('rh_specialites')->nullable(true);
-            $table->foreignId('brevet_id')->references('id')->on('rh_brevets')->nullable(true);
-            $table->foreignId('unite_id')->references('id')->on('rh_unites')->nullable(true);
+            $table->foreignId('grade_id')->nullable(true)->references('id')->on('rh_grades');
+            $table->foreignId('specialite_id')->nullable(true)->references('id')->on('rh_specialites');
+            $table->foreignId('brevet_id')->nullable(true)->references('id')->on('rh_brevets');
+            $table->foreignId('unite_id')->nullable(true)->references('id')->on('rh_unites');
             $table->json('data')->nullable();
             $table->timestamps();
             $table->softDeletes();
