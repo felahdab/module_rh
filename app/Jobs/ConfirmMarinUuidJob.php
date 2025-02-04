@@ -37,13 +37,13 @@ class ConfirmMarinUuidJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::warning("Handling marin uuid retreival :" . $this->uuid . ' ' . tenant()->id);
+        Log::warning("Handling marin uuid retreival :" . $this->uuid . ' ' . tenant()?->id);
         $marin = Marin::where('uuid', $this->uuid)->first();
         if (is_null($marin))
         {
             $this->fail("The provided uuid does not correspond to a valid marin record.");
         }
-        dump($marin->data);
+        //dump($marin->data);
 
         if (Arr::get($marin->data, "status") == "uuid_confirmed")
         {
@@ -107,7 +107,7 @@ class ConfirmMarinUuidJob implements ShouldQueue
 
 
             $marin_data = $json[0];
-            dump($marin_data);
+            //dump($marin_data);
 
             $marin->uuid = $marin_data["uuid"];
             $marin->nom = $marin_data["nom"];
