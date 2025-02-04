@@ -17,28 +17,6 @@ class UniteSeeder extends Seeder
     public function run()
     {
         $records = [
-            [1, 'GTR/B', 'GTR BREST'],
-            [2, 'GTR/T', 'GTR TOULON'],
-            [3, 'AQN_A', 'AQUITAINE A'],
-            [4, 'AQN_B', 'AQUITAINE B'],
-            [5, 'PCE_A', 'PROVENCE A'],
-            [6, 'PCE_B', 'PROVENCE B'],
-            [7, 'LGC_A', 'LANGUEDOC A'],
-            [8, 'LGC_B', 'LANGUEDOC B'],
-            [9, 'AVG', 'AUVERGNE'],
-            [10, 'BTE_A', 'BRETAGNE A'],
-            [11, 'BTE_B', 'BRETAGNE B'],
-            [12, 'NMD', 'NORMANDIE'],
-            [13, 'ALS', 'ALSACE'],
-            [14, 'LRN', 'LORRAINE'],
-            [15, 'HE', 'HORS ESCOUADE'],
-            [16, 'FCM', 'Formation Continue Modularisée']
-            ];
-        foreach ($records as $record){
-        //    DB::insert('insert into rh_unites (id, libelle_court, libelle_long) values (?, ?, ?)', $record);
-        }
-
-        $records = [
             [
               "5fba908c-e330-11ef-be6c-0242c0a8600a",
               "GTR/B",
@@ -138,7 +116,6 @@ class UniteSeeder extends Seeder
         ];
         
         foreach ($records as $record){
-            dump($record);
             DB::insert('insert into rh_unites (uuid, libelle_court, libelle_long) values (?, ?, ?)', $record);
         }
     }
