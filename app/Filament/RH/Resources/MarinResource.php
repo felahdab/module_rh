@@ -39,18 +39,14 @@ class MarinResource extends Resource
                     ->default(''),
                 Forms\Components\DatePicker::make('date_embarq'),
                 Forms\Components\DatePicker::make('date_debarq'),
-                Forms\Components\TextInput::make('grade_id')
-                    ->maxLength(36),
-                Forms\Components\TextInput::make('specialite_id')
-                    ->maxLength(36),
-                Forms\Components\TextInput::make('brevet_id')
-                    ->maxLength(36),
-                Forms\Components\TextInput::make('secteur_id')
-                    ->maxLength(36),
-                Forms\Components\TextInput::make('unite_id')
-                    ->maxLength(36),
-                Forms\Components\Textarea::make('data')
-                    ->columnSpanFull(),
+                Forms\Components\Select::make('grade_id')
+                    ->relationship(name: 'grade', titleAttribute: 'libelle_long'),
+                Forms\Components\Select::make('specialite_id')
+                    ->relationship(name: 'specialite', titleAttribute: 'libelle_court'),
+                Forms\Components\Select::make('brevet_id')
+                    ->relationship(name: 'brevet', titleAttribute: 'libelle_long'),
+                Forms\Components\Select::make('unite_id')
+                    ->relationship(name: 'unite', titleAttribute: 'libelle_long'),
             ]);
     }
 
@@ -59,6 +55,7 @@ class MarinResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('ID')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nom')
@@ -66,24 +63,26 @@ class MarinResource extends Resource
                 Tables\Columns\TextColumn::make('prenom')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('matricule')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nid')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('date_embarq')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_debarq')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('grade_id')
+                Tables\Columns\TextColumn::make('grade.libelle_court')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('specialite_id')
+                Tables\Columns\TextColumn::make('specialite.libelle_court')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('brevet_id')
+                Tables\Columns\TextColumn::make('brevet.libelle_court')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('secteur_id')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('unite_id')
+                Tables\Columns\TextColumn::make('unite.libelle_court')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -104,15 +103,16 @@ class MarinResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('associer-a-un-utilisateur')
-                    ->requiresConfirmation()
-                    ->action(function()
-                    {
-                        ddd("TODO: doit demander a selectionner un utilisqteur puis inscrire dans record->data->rh->local_user_id le id du user designe");
-                    }),
+                    ->url(
+                        function($record)
+                        {
+                            return Pages\AssociateMarin::getUrl(["record" => $record]);
+                        }
+                    ),
                 Tables\Actions\Action::make('verifier-avec-serveur-distant')
                     ->action(function(Marin $record)
                     {
-                        ConfirmMarinUuidJob::dispatch($record->id);
+                        ConfirmMarinUuidJob::dispatch($record->uuid);
                     }),
             ])
             ->bulkActions([
@@ -135,6 +135,7 @@ class MarinResource extends Resource
             'index' => Pages\ListMarins::route('/'),
             'create' => Pages\CreateMarin::route('/create'),
             'edit' => Pages\EditMarin::route('/{record}/edit'),
+            'associate' => Pages\AssociateMarin::route('/{record}/associate'),
         ];
     }
 }

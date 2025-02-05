@@ -15,6 +15,8 @@ class RHDatabaseSeeder extends Seeder
             SettingSeeder::class,
             GradeSeeder::class,
             BrevetSeeder::class,
+            SpecialiteSeeder::class,
+            UniteSeeder::class
         ]);
     }
 }

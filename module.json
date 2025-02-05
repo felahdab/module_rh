@@ -8,5 +8,6 @@
         "Modules\\RH\\Providers\\RHServiceProvider",
         "Modules\\RH\\Providers\\Filament\\RHPanelProvider"
     ],
-    "files": []
+    "files": [],
+    "version" : "0.0.1"
 }

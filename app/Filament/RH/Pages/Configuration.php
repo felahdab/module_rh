@@ -43,6 +43,10 @@ class Configuration extends Page implements HasForms, HasActions
 
     public static function canAccess(): bool
     {
+        if (! auth()->check())
+        {
+            return false;
+        }
         // TODO fcmcentral::change_module_configuration permission must be seeded into the permissions when intalling this module.
         return auth()->user()->can('rh::change_module_configurartion');
     }

@@ -27,7 +27,7 @@ class ConfirmMarinUuidJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public string $id)
+    public function __construct(public string $uuid)
     {
         //
     }
@@ -37,13 +37,13 @@ class ConfirmMarinUuidJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::warning("Handling marin uuid retreival :" . $this->id . ' ' . tenant()->id);
-        $marin = Marin::find($this->id);
+        Log::warning("Handling marin uuid retreival :" . $this->uuid . ' ' . tenant()?->id);
+        $marin = Marin::where('uuid', $this->uuid)->first();
         if (is_null($marin))
         {
-            $this->fail("The provided id does not correspond to a valid marin record.");
+            $this->fail("The provided uuid does not correspond to a valid marin record.");
         }
-        dump($marin->data);
+        //dump($marin->data);
 
         if (Arr::get($marin->data, "status") == "uuid_confirmed")
         {
@@ -101,15 +101,15 @@ class ConfirmMarinUuidJob implements ShouldQueue
             
             /**
              * Dans le cas normal, le serveur renvoit uniquement 1 marin. On met à jour la fiche local avec les données
-             * distantes. En particulier, on écrase l'id pour disposer d'une base d'id uniques au sein de l'ensemble des instances.
+             * distantes. En particulier, on écrase l'uuid pour disposer d'une base d'uuid uniques au sein de l'ensemble des instances.
              */
             Log::info("The NID is known. Updating local entry.");
 
 
             $marin_data = $json[0];
-            dump($marin_data);
+            //dump($marin_data);
 
-            $marin->id = $marin_data["id"];
+            $marin->uuid = $marin_data["uuid"];
             $marin->nom = $marin_data["nom"];
             $marin->prenom = $marin_data["prenom"];
 

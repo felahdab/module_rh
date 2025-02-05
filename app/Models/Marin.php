@@ -2,24 +2,29 @@
 
 namespace Modules\RH\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Modules\RH\Traits\HasTablePrefix;
+
 use Illuminate\Database\Eloquent\Model;
-
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+
+use App\Models\User;
+
+use Modules\RH\Traits\HasTablePrefix;
 use Modules\RH\Jobs\ConfirmMarinUuidJob;
+use Modules\RH\Database\Factories\MarinFactory;
+
 
 class Marin extends Model
 {
-    use HasUuids; 
     use HasTablePrefix;
+    use HasFactory;
 
     protected $fillable = [
         'id',
+        'uuid',
         'nom',
         'prenom',
         'matricule',
@@ -29,7 +34,6 @@ class Marin extends Model
         'grade_id',
         'specialite_id',
         'brevet_id',
-        'secteur_id',
         'unite_id',
         'data',
     ];
@@ -41,14 +45,85 @@ class Marin extends Model
         ];
     }
 
+    protected static function newFactory(): MarinFactory
+    {
+        return MarinFactory::new();
+    }
+
     protected static function booted(): void
     {
         static::creating(function (Marin $marin) {
             $data = ["status" => "pending_uuid_confirmation"];
             $marin->data = $data;
-
-            Log::info("Creating marin with id: " . $marin->id);
-            ConfirmMarinUuidJob::dispatch($marin->id);
         });
+
+        static::created(function (Marin $marin) {   
+            $marin->refresh();
+            Log::info("Creating marin with uuid: " . $marin->uuid);
+            ConfirmMarinUuidJob::dispatch($marin->uuid);
+        });
+    }
+
+    public function grade()
+    {
+        return $this->belongsTo(Grade::class, "grade_id", "id");
+    }
+
+    public function specialite()
+    {
+        return $this->belongsTo(Specialite::class, "specialite_id", "id");
+    }
+
+    public function brevet()
+    {
+        return $this->belongsTo(Brevet::class, "brevet_id", "id");
+    }
+
+    public function unite()
+    {
+        return $this->belongsTo(Unite::class, "unite_id", "id");
+    }
+
+    public function setUser(?User $user, bool $dissociate_others = true)
+    {
+
+        $user_id = $user ? $user->id : null;
+
+        if ($user_id != null && $dissociate_others)
+        {
+            static::where("data->rh->user_id", $user_id)
+                ->get()
+                ->each(function(Marin $marin){
+                    $marin->setUser(null);
+                });
+        }
+
+        $data = $this->data;
+        Arr::set($data, "rh.user_id", $user_id);
+        $this->data = $data;
+        $this->save();
+    }
+
+    public function getUser()
+    {
+        $user_id = Arr::get($this->data, "rh.user_id");
+        if ($user_id== null)
+            return null;
+        $user=User::find($user_id);
+        return $user;
+    }
+
+    public function isCurrentUser()
+    {
+        if (! auth()->check())
+            return false;
+        $user = auth()->user();
+        $this_user = $this->getUser();
+
+        if ($this_user && $this_user->id == $user->id)
+            return true;
+
+        return false;
+
     }
 }
