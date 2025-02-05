@@ -8,6 +8,7 @@ use App\Models\Setting;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Fieldset;
 
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -17,6 +18,8 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Form;
 use Filament\Actions\Action;
 use Filament\Forms\Get;
+
+use Modules\RH\Models\Unite;
 
 class Configuration extends Page implements HasForms, HasActions
 {
@@ -55,12 +58,16 @@ class Configuration extends Page implements HasForms, HasActions
     {
         return $form
             ->schema([
+                Select::make('unite')
+                    ->label("Unité locale")
+                    ->helperText("Cette unité sera celle utilisée par défaut pour les données RH locales.")
+                    ->options([Unite::pluck('libelle_long', 'id')]),
                 Toggle::make('use_remote_rh_server')
                     ->label("Utiliser un serveur RH distant ?")
                     ->live(),
                 Fieldset::make('remote_rh_settings')
                     ->label('Paramètres du serveur RH distant')
-                    ->hidden(fn (Get $get) => ! $get('use_remote_rh_server'))
+                    ->visible(fn (Get $get) => $get('use_remote_rh_server'))
                     ->schema([
                         TextInput::make('url_of_remote_rh_instance')
                             ->label('URL de l\'instance distante')
