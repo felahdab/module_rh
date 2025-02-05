@@ -37,6 +37,7 @@ return new class extends Migration
             $table->foreignId('specialite_id')->nullable(true)->references('id')->on('rh_specialites');
             $table->foreignId('brevet_id')->nullable(true)->references('id')->on('rh_brevets');
             $table->foreignId('unite_id')->nullable(true)->references('id')->on('rh_unites');
+            $table->foreignId('user_id')->nullable(true)->references('id')->on('users');
             $table->json('data')->nullable();
             $table->timestamps();
             $table->softDeletes();

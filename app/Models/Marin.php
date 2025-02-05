@@ -35,6 +35,7 @@ class Marin extends Model
         'specialite_id',
         'brevet_id',
         'unite_id',
+        'user_id',
         'data',
     ];
 
@@ -84,6 +85,11 @@ class Marin extends Model
         return $this->belongsTo(Unite::class, "unite_id", "id");
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function setUser(?User $user, bool $dissociate_others = true)
     {
 
@@ -91,26 +97,20 @@ class Marin extends Model
 
         if ($user_id != null && $dissociate_others)
         {
-            static::where("data->rh->user_id", $user_id)
+            static::where("user_id", $user_id)
                 ->get()
                 ->each(function(Marin $marin){
                     $marin->setUser(null);
                 });
         }
 
-        $data = $this->data;
-        Arr::set($data, "rh.user_id", $user_id);
-        $this->data = $data;
+        $this->user_id = $user_id;
         $this->save();
     }
 
     public function getUser()
     {
-        $user_id = Arr::get($this->data, "rh.user_id");
-        if ($user_id== null)
-            return null;
-        $user=User::find($user_id);
-        return $user;
+        return $this->user;
     }
 
     public function isCurrentUser()
