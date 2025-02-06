@@ -20,10 +20,30 @@ class Unite extends Model
 		'libelle_court', 
 		'libelle_long', 
 		'ordre',
+		'code_sirh_unite',
+		'id_mere',
 	];
 	
 	public function marins()
 	{
 		return $this->hasMany(Marin::class);
 	}
+
+	// Liaison Categorie Mere Fille dans table Unite
+	public function parent()
+	{
+		return $this->belongsTo(Unite::class,'id_mere');
+	}
+
+	public function children()
+	{
+		return $this->hasMany(Unite::class,'id_mere');
+	}
+
+	// Liaison entre TypeUnite et Unite
+	public function typeUnite()
+    {
+        return $this->belongsTo(TypeUnite::class, "type_unite_id", "id");
+    }
+
 }

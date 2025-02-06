@@ -2,9 +2,9 @@
 
 namespace Modules\RH\Filament\RH\Resources;
 
-use Modules\RH\Filament\RH\Resources\UniteResource\Pages;
-use Modules\RH\Filament\RH\Resources\UniteResource\RelationManagers;
-use Modules\RH\Models\Unite;
+use Modules\RH\Filament\RH\Resources\TypeUniteResource\Pages;
+use Modules\RH\Filament\RH\Resources\TypeUniteResource\RelationManagers;
+use Modules\RH\Models\TypeUnite;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,11 +15,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Select;
 
-class UniteResource extends Resource
+
+class TypeUniteResource extends Resource
 {
-    protected static ?string $model = Unite::class;
+    protected static ?string $model = TypeUnite::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -35,15 +35,6 @@ class UniteResource extends Resource
                     ->required()
                     ->maxLength(100)
                     ->default(''),
-
-                // Liaison entre Unite et Type Unite
-                Select::make('type_unite_id')
-                    ->relationship(name: 'typeUnite', titleAttribute: 'libelle_long'),   
-                // Categorie Mere Fille     
-                Select::make('id_mere')
-                    ->label('Categorie Mere')
-                    ->relationship(name: 'parent', titleAttribute: 'libelle_long'),    
-    
                 TextInput::make('ordre')
                     ->required()
                     ->numeric(),
@@ -71,15 +62,10 @@ class UniteResource extends Resource
                     ->searchable(),
                 TextColumn::make('libelle_long')
                     ->searchable(),
-                TextColumn::make('typeUnite.libelle_court')
-                    ->searchable(),  
-                TextColumn::make('parent.libelle_court')
-                    ->label('Categorie')
-                    ->searchable(),         
                 TextColumn::make('ordre')
                     ->numeric()
                     ->sortable(),
-                
+
             ])
             ->filters([
                 //
@@ -105,12 +91,9 @@ class UniteResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUnites::route('/'),
-            'create' => Pages\CreateUnite::route('/create'),
-            'edit' => Pages\EditUnite::route('/{record}/edit'),
+            'index' => Pages\ListTypeUnites::route('/'),
+            'create' => Pages\CreateTypeUnite::route('/create'),
+            'edit' => Pages\EditTypeUnite::route('/{record}/edit'),
         ];
     }
 }
-
-
-

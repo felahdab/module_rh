@@ -37,6 +37,9 @@ class Marin extends Model
         'unite_id',
         'user_id',
         'data',
+        'email',
+        'display_name',
+        'code_sirh_user',
     ];
 
     protected function casts(): array
