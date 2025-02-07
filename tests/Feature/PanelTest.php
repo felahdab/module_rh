@@ -35,7 +35,7 @@ it('displays the marins table for admins', function() {
     actingAs($this->admin)->get(MarinResource::getUrl('index'))->assertSuccessful();
 });
 
-it('doesn\'t display the activite table for non admins', function() {
+it('doesn\'t display the marin table for non admins', function() {
     $user=User::factory()->create();
 
     actingAs($user)->get(MarinResource::getUrl('index'))->assertForbidden();
@@ -86,7 +86,7 @@ it('can render marin edition page', function () {
 
 });
 
-it('does save the new data into database when editing activite', function () {
+it('does save the new data into database when editing marin', function () {
     $marin = Marin::factory()->create();
 
     Livewire::actingAs($this->admin)
