@@ -57,8 +57,12 @@ class Marin extends Model
     protected static function booted(): void
     {
         static::creating(function (Marin $marin) {
-            $data = ["status" => "pending_uuid_confirmation"];
-            $marin->data = $data;
+            // Modification de la regle status pour les Tests (pour pouvoir mettre un autre status lors de la creation)
+            // $data = ["status" => "pending_uuid_confirmation"];
+            // $marin->data = $data;
+            if (empty($marin->data)){
+                $marin->data = ["status" => "pending_uuid_confirmation"];
+            }
         });
 
         static::created(function (Marin $marin) {   
@@ -129,4 +133,34 @@ class Marin extends Model
         return false;
 
     }
+
+    /**
+     *  Trouver un marin par NID ou creer un nouveau si il existe pas
+     * 
+     *  Function qui cherche un Marin par NID pour les TESTS car champ UNIQUE
+     *  Si il trouve, il reprend ce marin
+     *  SI il trouve pas, il le cree
+     * 
+     * @param string $nid Le NID pour trouver Marin
+     * @param array $data les champ pour specifier la creation
+     * @return \Modules\RH\Models\Marin Chreche ou creer dans RH_Marin
+     */
+    public static function findOrCreateByNid(string $nid, array $data  ){
+        $attributes = ['nid' => $nid ];
+
+        $values = [];
+        if(!empty($data['data'])){
+            $values['data']=json_encode($data['data']);
+        }else{
+            $values['prenom']=json_encode(['status' => 'pending_uuid_confirmation']);
+        }
+
+        $values['uuid']     = $data['uuid'] ?? 'UUID Test';
+        $values['prenom']   = $data['prenom'] ?? 'Prenom Test';
+        $values['nom']      = $data['nom'] ?? 'Nom Test';
+
+        return self::firstOrCreate($attributes,$values);
+        
+    }
+
 }
