@@ -7,10 +7,19 @@ use Modules\RH\Models\Marin;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Log;
 
+// 2eme fonction
+use Mockery;
+use Modules\RH\Http\Integrations\Connectors\CentralRHServerConnector;
+use Modules\RH\Http\Integrations\Requests\RetreiveMarinByNID;
+
+
 use Tests\TestCase;
 
 class ConfirmMarinUuidJobTest extends TestCase
 {
+
+
+    
     
     // NOTE 
     // J'ai du modifier Fichier Database dans ma version pour les tests
@@ -22,6 +31,42 @@ class ConfirmMarinUuidJobTest extends TestCase
 
      public function testConfirmMarinUuidJobIsDispatched()
      {
+        
+        // Simuler file attente
+        // Isolation test (ne sont pas relllement executes mais garde en memoire)
+        Queue::fake();
+
+        // Creer nouveau marin
+        $marin = Marin::factory()->create();
+
+        // Dispatch le job manuellement pour simuler comportement attendu
+        // ConfirmMarinUuidJob::dispatch($marin->uuid);
+
+        // Verification que le job ConfirmMarinUuidJob se declenche
+        Queue::assertPushed(ConfirmMarinUuidJob::class, function ($job) use ($marin){
+            return $job->uuid === $marin->uuid ;
+        });
+
+        // Supprimer marin Test
+         $marin->delete();
+        
+        
+        
+        
+        
+
+     }
+    
+    
+    /**
+     * Autre Idee pour confirmation
+     */
+    
+
+     /*
+    public function test_the_application_returns_a_successful_response(): void
+    {
+        
         // Creation Marin
         $marin = Marin::factory()->create();
 
@@ -45,33 +90,18 @@ class ConfirmMarinUuidJobTest extends TestCase
         // Check si job a bien été exécuté
         $this->assertTrue(true);
 
-     }
-    
-    
-    /**
-     * Autre Idee pour confirmation
-     */
-    
-
-     /*
-    public function test_the_application_returns_a_successful_response(): void
-    {
-        // Simuler file attente
-        // Isolation test (ne sont pas relllement executes mais garde en memoire)
-        Queue::fake();
-
-        // Creer nouveau marin
-        $marin = Marin::factory()->create();
-
-        // Dispatch le job manuellement pour simuler comportement attendu
-        ConfirmMarinUuidJob::dispatch($marin->uuid);
-
-        // Verification que le job ConfirmMarinUuidJob se declenche
-        Queue::assertPushed(ConfirmMarinUuidJob::class, function ($job) use ($marin){
-            return $job->uuid === $marin->uuid ;
-        });
+        // Supprimer marin Test
+        $marin->delete();
+        
+        
 
     }
 
     */
+
+
+    
+
+
+
 }
