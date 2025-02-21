@@ -5,7 +5,7 @@ namespace Modules\RH\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
-
+use Modules\RH\Console\ResetTestDatabase;
 use Modules\RH\Models\Brevet;
 use Modules\RH\Policies\BrevetPolicy;
 
@@ -71,7 +71,9 @@ class RHServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
+        $this->commands([
+            ResetTestDatabase::class,
+        ]);
     }
 
     /**

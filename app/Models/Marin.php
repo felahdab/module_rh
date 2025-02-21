@@ -10,11 +10,13 @@ use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
-use App\Models\User;
+use Modules\RH\Models\User;
 
 use Modules\RH\Traits\HasTablePrefix;
 use Modules\RH\Jobs\ConfirmMarinUuidJob;
 use Modules\RH\Database\Factories\MarinFactory;
+
+use Modules\FcmCommun\Services\PasswordGeneratorService;
 
 
 class Marin extends Model
@@ -95,6 +97,7 @@ class Marin extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+        //return $this->hasOne(User::class);
     }
 
     public function setUser(?User $user, bool $dissociate_others = true)
@@ -134,6 +137,10 @@ class Marin extends Model
 
     }
 
+    /////////////
+    // JULIEN  //
+    /////////////
+
     /**
      *  Trouver un marin par NID ou creer un nouveau si il existe pas
      * 
@@ -143,7 +150,7 @@ class Marin extends Model
      * 
      * @param string $nid Le NID pour trouver Marin
      * @param array $data les champ pour specifier la creation
-     * @return \Modules\RH\Models\Marin Chreche ou creer dans RH_Marin
+     * @return \Modules\RH\Models\Marin Cherche ou creer dans RH_Marin
      */
     public static function findOrCreateByNid(string $nid, array $data  ){
         $attributes = ['nid' => $nid ];
@@ -163,4 +170,34 @@ class Marin extends Model
         
     }
 
+
+    /**
+     *  Creer un User
+     * 
+     *  Function qui cree un user similaire a RH_marins
+     * 
+     * @return \Modules\RH\Models\Marin Creation User de Marin
+     */
+    public  function createUser()
+    {
+        // User existe deja
+        if ($this->user){
+            return null;
+        }
+
+        $user = User::create([
+            'nom'   =>$this->nom,
+            'prenom'=>$this->prenom,
+            'email' =>$this->email,
+            'password'=>PasswordGeneratorService::generate(12),
+
+        ]);
+
+        $this->user()->associate($user);
+        $this->save();
+
+        return $user;
+    }
+
+    
 }
