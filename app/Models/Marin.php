@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-
+use Modules\FcmCentral\Models\FcmCentralMarin;
+use Modules\FcmUnite\Models\FcmUniteMarin;
 use Modules\RH\Models\User;
 
 use Modules\RH\Traits\HasTablePrefix;
@@ -98,6 +98,16 @@ class Marin extends Model
     {
         return $this->belongsTo(User::class);
         //return $this->hasOne(User::class);
+    }
+
+    public function fcmCentralMarins()
+    {
+        return $this->hasMany(FcmCentralMarin::class);
+    }
+
+    public function fcmUniteMarins()
+    {
+        return $this->hasMany(FcmUniteMarin::class);
     }
 
     public function setUser(?User $user, bool $dissociate_others = true)
