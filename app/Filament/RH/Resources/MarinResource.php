@@ -12,6 +12,15 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Notifications\Notification;
+
+
 
 use Modules\RH\Jobs\ConfirmMarinUuidJob;
 
@@ -25,27 +34,31 @@ class MarinResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nom')
+                TextInput::make('nom')
+                    ->required()
+                    ->autofocus()
+                    ->maxLength(255),
+                TextInput::make('prenom')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('prenom')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('matricule')
+                TextInput::make('email')
+                    ->unique()
+                    ->required(),
+                TextInput::make('matricule')
                     ->maxLength(20)
                     ->default(''),
-                Forms\Components\TextInput::make('nid')
+                TextInput::make('nid')
                     ->maxLength(15)
                     ->default(''),
-                Forms\Components\DatePicker::make('date_embarq'),
-                Forms\Components\DatePicker::make('date_debarq'),
-                Forms\Components\Select::make('grade_id')
+                DatePicker::make('date_embarq'),
+                DatePicker::make('date_debarq'),
+                Select::make('grade_id')
                     ->relationship(name: 'grade', titleAttribute: 'libelle_long'),
-                Forms\Components\Select::make('specialite_id')
+                Select::make('specialite_id')
                     ->relationship(name: 'specialite', titleAttribute: 'libelle_court'),
-                Forms\Components\Select::make('brevet_id')
+                Select::make('brevet_id')
                     ->relationship(name: 'brevet', titleAttribute: 'libelle_long'),
-                Forms\Components\Select::make('unite_id')
+                Select::make('unite_id')
                     ->relationship(name: 'unite', titleAttribute: 'libelle_long'),
             ]);
     }
@@ -54,48 +67,58 @@ class MarinResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('ID')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('nom')
+                TextColumn::make('nom')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('prenom')
+                TextColumn::make('prenom')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('matricule')
+                TextColumn::make('matricule')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
-                Tables\Columns\TextColumn::make('nid')
+                TextColumn::make('nid')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
-                Tables\Columns\TextColumn::make('date_embarq')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('date_debarq')
+                TextColumn::make('date_embarq')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('grade.libelle_court')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('specialite.libelle_court')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('brevet.libelle_court')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('unite.libelle_court')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('date_debarq')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->date()
+                    ->sortable(),
+                TextColumn::make('grade.libelle_court')
+                    ->searchable()
+                    ->badge(),
+                TextColumn::make('specialite.libelle_court')
+                    ->searchable()
+                    ->badge(),
+                TextColumn::make('brevet.libelle_court')
+                    ->searchable()
+                    ->badge(),
+                TextColumn::make('unite.libelle_court')
+                    ->searchable()
+                    ->badge(),
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('user.nom')
+                    ->label('Utilisateur')
+                    ->sortable()
+                    ->searchable()
+                    ->url(fn (Marin $record)=> $record->user  ? route ('filament.Skeletor.resources.users.edit', $record->user->id): null)  
+                    //->visible(fn (?Marin $record)=> $record && $record->user !== null),    
             ])
             ->filters([
                 //
@@ -114,7 +137,31 @@ class MarinResource extends Resource
                     {
                         ConfirmMarinUuidJob::dispatch($record->uuid);
                     }),
-            ])
+               
+                // Bouton pour creer un user 
+                Tables\Actions\Action::make('createUser')
+                    ->label('Créer Utilisateur')
+                    //->label('')
+                    //->icon($icon = 'heroicon-o-user-add')
+                    ->action(function (Marin $record) {
+                        $user = $record->createUser();
+                        if ($user) {
+                            Notification::make()
+                            ->title('Utilisateur créé avec succès.')
+                            ->success()
+                            ->send();
+                        } else {
+                            Notification::make()
+                            ->title('Erreur lors de la création de l\'utilisateur.')
+                            ->danger()
+                            ->send();
+                        }
+                    })
+                    ->requiresConfirmation()
+                    ->visible(fn (Marin $record) =>$record->user === null && auth()->user()->can('users.store')),
+                    
+                // Fin Bouton 
+                ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
