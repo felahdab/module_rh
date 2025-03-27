@@ -8,6 +8,7 @@ use Filament\Resources\Pages\EditRecord;
 use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Auth;
 use Filament\Notifications\Notification;
+use Illuminate\Http\Request;
 
 class EditMarin extends EditRecord
 {
@@ -38,5 +39,22 @@ class EditMarin extends EditRecord
                 ->visible(fn () => auth()->user()->can('users.store')),
                
         ];
+    }
+
+    protected function afterSave(): void
+    {
+        // Notification
+        // Notification::make()
+        //     ->title('Marin modifié avec succès')
+        //     ->success()
+        //     ->send();
+        
+        // Redirection en fonction Module
+        // dd(request()->fullUrl());
+        // if (request()->query('type')==='fcmcommun')
+        // {
+           
+        //     $this->redirectRoute('filament.ressources.fcm-commun/marins.index');
+        // }
     }
 }

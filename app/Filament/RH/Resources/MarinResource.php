@@ -28,7 +28,17 @@ class MarinResource extends Resource
 {
     protected static ?string $model = Marin::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+
+    // Pour modifier slug (doc dans ressources)
+    //protected static ?string $slug = 'toto';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::$model::count();
+    }
+
+
 
     public static function form(Form $form): Form
     {
@@ -42,7 +52,11 @@ class MarinResource extends Resource
                     ->required()
                     ->maxLength(255),
                 TextInput::make('email')
-                    ->unique()
+                    ->unique(
+                        table: 'rh_marins',
+                        column: 'email',
+                        ignoreRecord : true
+                    )
                     ->required(),
                 TextInput::make('matricule')
                     ->maxLength(20)
@@ -60,6 +74,7 @@ class MarinResource extends Resource
                     ->relationship(name: 'brevet', titleAttribute: 'libelle_long'),
                 Select::make('unite_id')
                     ->relationship(name: 'unite', titleAttribute: 'libelle_long'),
+                
             ]);
     }
 

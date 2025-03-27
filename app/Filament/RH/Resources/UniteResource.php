@@ -23,6 +23,8 @@ class UniteResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Categories';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -43,7 +45,7 @@ class UniteResource extends Resource
                 Select::make('id_mere')
                     ->label('Categorie Mere')
                     ->relationship(name: 'parent', titleAttribute: 'libelle_long'),    
-    
+               
                 TextInput::make('ordre')
                     ->required()
                     ->numeric(),
@@ -71,6 +73,11 @@ class UniteResource extends Resource
                     ->searchable(),
                 TextColumn::make('libelle_long')
                     ->searchable(),
+                TextColumn::make('marins_count')
+                    ->label('Nb Marins')
+                    ->counts('marins')
+                    ->sortable()
+                    ->badge(),        
                 TextColumn::make('typeUnite.libelle_court')
                     ->searchable(),  
                 TextColumn::make('parent.libelle_court')

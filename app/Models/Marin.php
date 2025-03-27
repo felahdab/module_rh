@@ -8,15 +8,16 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\FcmCentral\Models\FcmCentralMarin;
-use Modules\FcmUnite\Models\FcmUniteMarin;
+use Modules\FcmCentral\Models\Marin as FcmCentralMarin;
+use Modules\FcmUnite\Models\Marin as FcmUniteMarin;
+use Modules\FcmCommun\Models\Cohorte;
 use Modules\RH\Models\User;
 
 use Modules\RH\Traits\HasTablePrefix;
 use Modules\RH\Jobs\ConfirmMarinUuidJob;
 use Modules\RH\Database\Factories\MarinFactory;
 
-use Modules\FcmCommun\Services\PasswordGeneratorService;
+use App\Service\RandomPasswordGeneratorService;
 
 
 class Marin extends Model
@@ -100,14 +101,29 @@ class Marin extends Model
         //return $this->hasOne(User::class);
     }
 
-    public function fcmCentralMarins()
+    public function fcmCentralMarin()
     {
-        return $this->hasMany(FcmCentralMarin::class);
+        return $this->hasMany(FcmCentralMarin::class,'rh_marin_id','id');
     }
 
-    public function fcmUniteMarins()
+    public function fcmUniteMarin()
     {
-        return $this->hasMany(FcmUniteMarin::class);
+        return $this->hasMany(FcmUniteMarin::class,'rh_marin_id','id');
+    }
+
+    public function fcmCentralMentors()
+    {
+        return $this->hasMany(FcmCentralMarin::class,'mentor_id','id');
+    }
+
+    public function fcmUniteMentors()
+    {
+        return $this->hasMany(FcmUniteMarin::class,'mentor_id','id');
+    }
+
+    public function fcmCentralCohorte()
+    {
+        return $this->hasOneThrough(Cohorte::class, FcmCentralMarin::class, 'rh_marin_id','id', 'id', 'cohorte_id');
     }
 
     public function setUser(?User $user, bool $dissociate_others = true)
@@ -150,6 +166,34 @@ class Marin extends Model
     /////////////
     // JULIEN  //
     /////////////
+
+    /**
+     * Accessor pour nom complet
+     * @return string
+     */
+    public function getFullName2Attribute()
+    {
+        $gradeName = $this->grade->libelle_court ??' N/A';
+        return $this->nom.' '.$this->prenom.' ('.$gradeName.')';
+    }
+
+    /**
+     * Relation pour acceder directement au mentor via FcmCentralMarin
+     */
+
+     public function directMentor()
+     {
+        return $this->hasOneThrough(
+            self::class, // Modele Fini
+            FcmCentralMarin::class, // Modele intermediaire
+            'rh_marin_id', // Cle etrangere de fcmcentralmarins poitnant vers rh_marins
+            'id', // cle etranger de rh_marins vers mentor
+            'id', // cle local rh_marins
+            'mentor_id' // cle locale fcmcentral_marins
+        );
+    }
+
+        
 
     /**
      *  Trouver un marin par NID ou creer un nouveau si il existe pas
@@ -199,7 +243,7 @@ class Marin extends Model
             'nom'   =>$this->nom,
             'prenom'=>$this->prenom,
             'email' =>$this->email,
-            'password'=>PasswordGeneratorService::generate(12),
+            'password'=>RandomPasswordGeneratorService::generateRandomString(10),
 
         ]);
 
@@ -209,5 +253,6 @@ class Marin extends Model
         return $user;
     }
 
+    
     
 }

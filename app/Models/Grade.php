@@ -26,6 +26,6 @@ class Grade extends Model
 	
 	public function marins()
 	{
-		return $this->hasMany(Marin::class, "grade_id", "uuid");
+		return $this->hasMany(Marin::class, 'grade_id', 'id');
 	}
 }

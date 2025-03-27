@@ -21,4 +21,9 @@ class Specialite extends Model
         'data',
         'ordre'
     ];
+
+    public function marins()
+	{
+		return $this->hasMany(Marin::class, 'specialite_id', 'id');
+	}
 }
