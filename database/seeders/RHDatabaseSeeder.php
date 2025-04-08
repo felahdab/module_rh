@@ -17,7 +17,9 @@ class RHDatabaseSeeder extends Seeder
             BrevetSeeder::class,
             SpecialiteSeeder::class,
             TypeUniteSeeder::class,
-            UniteSeeder::class
+            UniteSeeder::class,
+            MarinSeeder::class,
+            MpeSeeder::class,
         ]);
     }
 }

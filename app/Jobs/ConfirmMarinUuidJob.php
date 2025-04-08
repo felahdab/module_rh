@@ -74,8 +74,9 @@ class ConfirmMarinUuidJob implements ShouldQueue
         
         $server = new CentralRHServerConnector($url, $token);
         $request = new RetreiveMarinByNID($marin->nid);
-
+        //dd($request);
         $response = $server->send($request);
+        //dd($response->successful());
 
         if ($response->successful())
         {

@@ -22,4 +22,8 @@ class Brevet extends Model
 		'data'
 	];
 
+	public function marins()
+	{
+		return $this->hasMany(Marin::class, 'brevet_id', 'id');
+	}
 }

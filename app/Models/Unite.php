@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\RH\Traits\HasTablePrefix;
 
 use Modules\RH\Models\Marin;
+use Modules\RH\Models\Mpe ;
 
 class Unite extends Model
 {
@@ -26,7 +27,7 @@ class Unite extends Model
 	
 	public function marins()
 	{
-		return $this->hasMany(Marin::class);
+		return $this->hasMany(Marin::class, 'unite_id', 'id');
 	}
 
 	// Liaison Categorie Mere Fille dans table Unite
@@ -45,5 +46,11 @@ class Unite extends Model
     {
         return $this->belongsTo(TypeUnite::class, "type_unite_id", "id");
     }
+
+
+	public function mpe()
+	{
+		return $this->hasMany(Mpe::class,'unite_id');
+	}
 
 }

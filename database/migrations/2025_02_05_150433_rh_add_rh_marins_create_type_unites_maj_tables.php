@@ -56,7 +56,22 @@ return new class extends Migration
         //Liaison entre RH_unites et RH_type_unites
         Schema::table('rh_unites', function (Blueprint $table) {
             $table->foreignId('type_unite_id')->nullable()->references('id')->on('rh_type_unites');
-        });    
+        });
+        
+        
+         // Creation table RH_mpe
+        Schema::create('rh_mpes', function (Blueprint $table) use ($default_value) {
+            $table->id();
+            $table->uuid('uuid')->default($default_value);
+            $table->foreignId('marin_id')->constrained('rh_marins')->onDelete('cascade');
+            $table->foreignId('unite_id')->nullable()->constrained('rh_unites')->onDelete('cascade');
+            $table->boolean('sansdate')->default(false);
+            $table->date('date_debut')->nullable();
+            $table->date('date_fin')->nullable();
+            $table->timestamps();
+        });
+
+    
     }
 
     /**
@@ -88,5 +103,6 @@ return new class extends Migration
 
 
         Schema::dropIfExists('rh_specialites');
+        Schema::dropIfExists('rh_mpe');
     }
 };
