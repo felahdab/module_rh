@@ -5,9 +5,11 @@ namespace Modules\RH\Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-use Modules\RH\Models\Mpe;
+use Illuminate\Support\Facades\DB;
 
-class MpeSeeder extends Seeder
+use App\Models\Permission;
+
+class PermissionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,8 +18,6 @@ class MpeSeeder extends Seeder
      */
     public function run()
     {
-        if (config('app.env' != 'production')){
-            Mpe::factory()->count(10)->create();
-            }
+        Permission::firstOrCreate(["name" => "rh::change_module_configurartion", "guard_name" => "web"]);
     }
 }

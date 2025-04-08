@@ -20,29 +20,25 @@ class MarinSeeder extends Seeder
      */
     public function run()
     {
-        // Si les tables ont des champs
-        // $this->call(GradeSeeder::class);
-
-
-
-
-        // Creer 9 marins
-        Marin::factory()->count(9)->create();
-        
-         // Creer un mentor
-         Marin::create([
-            'uuid'      =>  (string) \Illuminate\Support\Str::uuid(),
-            'nid'       => 'nid_mentor',
-            'nom'       => 'MENTOR',
-            'prenom'    => 'Prenom',
-            //'grade_id'      =>  Grade::factory()->create()->id,
-            'grade_id'      =>  Grade::inRandomOrder()->first()->id,
-            'specialite_id' =>  Specialite::inRandomOrder()->first()->id,
-            'brevet_id'     =>  Brevet::inRandomOrder()->first()->id,
-            'unite_id'      =>  Unite::inRandomOrder()->first()->id,
-            'data'      => json_encode(['role' => 'mentor']),
-            'user_id'   => null,
-        ]);
+        if (config('app.env' != 'production')){
+            // Creer 9 marins
+            Marin::factory()->count(9)->create();
+            
+            // Creer un mentor
+            Marin::create([
+                'uuid'      =>  (string) \Illuminate\Support\Str::uuid(),
+                'nid'       => 'nid_mentor',
+                'nom'       => 'MENTOR',
+                'prenom'    => 'Prenom',
+                //'grade_id'      =>  Grade::factory()->create()->id,
+                'grade_id'      =>  Grade::inRandomOrder()->first()->id,
+                'specialite_id' =>  Specialite::inRandomOrder()->first()->id,
+                'brevet_id'     =>  Brevet::inRandomOrder()->first()->id,
+                'unite_id'      =>  Unite::inRandomOrder()->first()->id,
+                'data'      => json_encode(['role' => 'mentor']),
+                'user_id'   => null,
+            ]);
+        }
        
     }
 }
