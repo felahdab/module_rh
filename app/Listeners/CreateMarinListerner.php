@@ -25,17 +25,8 @@ class CreateMarinListerner
     public function handle(UnMarinDoitEtreCreeEvent $event)
     {
         $description = $event->description;
-        $marin = new Marin;
-        
-        $marin->nom=$description->nom;
-        $marin->prenom=$description->prenom;
-        $marin->email=$description->email;
-
-        $marin->display_name = $marin->prenom . " " . $marin->nom;
-        
-        $marin->save();
-        $marin->refresh();
-
+//        ddd($description->toArray());
+        $marin = Marin::create($description->toArray());
 
     }
 }

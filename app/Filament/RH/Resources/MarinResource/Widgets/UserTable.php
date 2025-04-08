@@ -8,7 +8,7 @@ use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\User;
+use Modules\RH\Models\User;
 
 class UserTable extends BaseWidget
 {

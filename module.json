@@ -6,7 +6,8 @@
     "priority": 0,
     "providers": [
         "Modules\\RH\\Providers\\RHServiceProvider",
-        "Modules\\RH\\Providers\\Filament\\RHPanelProvider"
+        "Modules\\RH\\Providers\\Filament\\RHPanelProvider",
+        "Modules\\RH\\Providers\\EventServiceProvider"
     ],
     "files": [],
     "version" : "0.0.1"
