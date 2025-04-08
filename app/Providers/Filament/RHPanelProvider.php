@@ -27,15 +27,12 @@ use App\Http\Middleware\InitializeTenancyByPath;
 use App\Http\Middleware\SetTenantCookieMiddleware;
 use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
 
-// Test Julien
-use Modules\FcmCommun\Helpers\NavigationFilamentHelper;
+
 use Filament\Navigation\NavigationItem;
 use Filament\Pages\Dashboard;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationBuilder;
 use Modules\RH\Filament\RH\Resources\MarinResource;
-use Modules\FCmCentral\Filament\Fcmcentral\Resources\MarinResource as FcmCentralMarinResource;
-use Modules\FCmCommun\Filament\Fcmcommun\Resources\MarinResource as FcmCommunMarinResource;
 
 class RHPanelProvider extends PanelProvider
 {
@@ -85,65 +82,8 @@ class RHPanelProvider extends PanelProvider
             // Menu Side Bar Haut
             ->topNavigation()
             ->navigationItems([   
-                // Decompacte le tableau
-                ...NavigationFilamentHelper::registerNavigationsItems()
-            ])  
- /*
-            // Ajout Menu Supp TEST
-            ->navigationItems([
-                NavigationItem::make('Google')
-                    ->url('https://google.fr', shouldOpenInNewTab:true)
-                    ->icon('heroicon-o-presentation-chart-line')
-                    ->group('Test')
-                    ->sort(2)
-                    ->visible(fn():bool => auth()->user()->can('users.store')),
-                NavigationItem::make('dashboard')
-                    ->label(fn():string => __('filament-panels::pages/dashboard.title'))
-                    ->url(fn (): string => Dashboard::getUrl())
-                    ->icon('heroicon-o-presentation-chart-line')
-                    ->isActiveWhen(fn () => request()->routeIs('filament.RH.pages.dashboard'))
-                    ->group('Test')
-                    ->sort(3)
-                    ->hidden(fn():bool => ! auth()->user()->can('users.store')),
-            ])
-            ->navigationGroups([
-                'Test',
-                'Categories',
-            ])
-               
-            ->navigation(function (NavigationBuilder $builder): NavigationBuilder {
-                // return $builder->items([
-                 //    NavigationItem::make('TataYoYo')
-                 //        ->icon('heroicon-o-home')
-                 //        ->isActiveWhen(fn (): bool => request()->routeIs('filament.admin.pages.dashboard'))
-                 //        ->url(fn (): string => Dashboard::getUrl()),
-                 //    ...MarinResource::getNavigationItems(),
-                     //...Settings::getNavigationItems(),
-                 // ]);
-                 return $builder->groups([
-                     NavigationGroup::make('Website')
-                         ->items([
-                             ...MarinResource::getNavigationItems(),
-                             ...FcmCentralMarinResource::getNavigationItems(),
-                             ...FcmCommunMarinResource::getNavigationItems(),
-                         ]),
-                 ]);
-             });
-*/
-            
-    
-    
-            /*
-            ->navigationGroups([
-                NavigationGroup::make()
-                    ->label('Test'),
-                    
-                NavigationGroup::make()
-                    ->label('Categories')
-                    ->icon('heroicon-o-presentation-chart-line') ,
-            ])
-            */
-            ;
+
+            ]);
     }
 
     protected function getModuleNamespace(): string
