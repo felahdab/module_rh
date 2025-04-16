@@ -65,6 +65,7 @@ it('creates a marin in database', function () {
         ->fillForm([
             'nom' => $newData->nom,
             'prenom' => $newData->prenom,
+            'email' => $newData->email,
         ])
         ->call('create')
         ->assertHasNoFormErrors();

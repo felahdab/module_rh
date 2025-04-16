@@ -22,9 +22,12 @@ class MarinFactory extends Factory
      */
     public function definition()
     {
+        $nom = $this->faker->text(5);
+        $prenom = $this->faker->text(5);
         return [
-            'nom'           =>  $this->faker->text(5),
-            'prenom'        =>  $this->faker->text(5),
+            'nom'           =>  $nom,
+            'prenom'        =>  $prenom,
+            'email'         =>  $prenom.'.'.$nom.'@intradef.gouv.fr',
             // 'grade_id'      =>  Grade::factory(),
             'grade_id'      =>  Grade::inRandomOrder()->first()?->id,
             'specialite_id' =>  Specialite::inRandomOrder()->first()?->id,
