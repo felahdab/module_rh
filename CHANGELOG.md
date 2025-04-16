@@ -1,3 +1,12 @@
+## 0.0.5 (April 16, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.0.4 –> 0.0.5
+- Ajustement de la factory des Marin et des tests pour tout mettre en cohérence.
+- Ajustements PSR-4
+- Retrait des références au module de FCM du modèle Marin.
+- Définition des 2 paramètres obligatoires de la création d'un Marin (nom et prenom) dans la NewMarinDescriptionData
+- Introduction du seeder de permissions pour créér la permission de gestion de la configuration du module. Nettoyage des seeders déjà présents.
+- Nettoyage RHPanelServiceProvider
+
 ## 0.0.4 (April 08, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.0.3 –> 0.0.4
 - Ajout service provider pour gérer les évènements du module. Implémentation du listener de création du Marin.
