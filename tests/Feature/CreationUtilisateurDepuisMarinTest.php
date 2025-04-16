@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Artisan;
  * @property \App\Models\User @adminUser
  * 
  */
-class creationUtilisateurDepuisMarinTest extends TestCase
+class CreationUtilisateurDepuisMarinTest extends TestCase
 {
 
     use RefreshDatabase;
