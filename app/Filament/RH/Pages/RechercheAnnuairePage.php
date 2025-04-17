@@ -9,6 +9,7 @@ use Filament\Tables\Actions\BulkAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Wizard;
 use Filament\Forms;
 use Filament\Forms\Get;
 use Filament\Support\Enums;
@@ -26,6 +27,8 @@ use Modules\RH\Models\Specialite;
 use Modules\RH\Models\Brevet;
 use Modules\RH\Models\Unite;
 
+use Modules\RH\Filament\RH\Pages\RechercheAnnuaireforms\RechercheAnnuaireCreateUserOrMarinForm;
+
 class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
 {
     public function getRowActions()
@@ -39,46 +42,7 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
                 ->label("Créé une fiche Marin et/ou un utilisateur local")
                 ->requiresConfirmation()
                 ->modalWidth(Enums\MaxWidth::SevenExtraLarge)
-                ->form([
-                    Toggle::make('marin')
-                        ->visible(fn () => auth()->user()->can('create', Marin::class))
-                        ->label("Créér une fiche Marin ?")
-                        ->live(),
-                    Section::make('Données complémentaires pour la fiche du marin')
-                        ->visible(fn (Get $get) => $get('marin'))
-                        ->columns(4)
-                        ->schema(
-                        [
-                            Forms\Components\TextInput::make('matricule')
-                                ->maxLength(20)
-                                ->default(''),
-                            Forms\Components\TextInput::make('nid')
-                                ->maxLength(15)
-                                ->default(''),
-                            Forms\Components\DatePicker::make('date_embarq'),
-                            Forms\Components\DatePicker::make('date_debarq'),
-                            Forms\Components\Select::make('grade_id')
-                                ->options(Grade::all()->pluck('libelle_long', 'id')),
-                            Forms\Components\Select::make('specialite_id')
-                                ->options(Specialite::all()->pluck('libelle_long', 'id')),
-                            Forms\Components\Select::make('brevet_id')
-                                ->options(Brevet::all()->pluck('libelle_long', 'id')),
-                            Forms\Components\Select::make('unite_id')
-                                ->options(Unite::all()->pluck('libelle_long', 'id')),
-                        ]),
-
-
-                    Toggle::make('user')
-                        ->visible(fn () => auth()->user()->can('create', User::class))
-                        ->label("Créér un compte utilisateur ?")
-                        ->live(),
-                    Select::make('roles')
-                        ->visible(fn (Get $get) => $get('user'))
-                        ->label("Rôles à attribuer")
-                        ->options(Role::all()->pluck('name', 'id'))
-                        ->multiple()
-                        ->required()
-                ])
+                ->form([Wizard::make()->schema(RechercheAnnuaireCreateUserOrMarinForm::getSchema())])
                 ->action(function ($record, $data){
                     // array:11 [▼ // vendor/spatie/laravel-ignition/src/helpers.php:14
                     //   "marin" => true
