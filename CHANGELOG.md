@@ -1,3 +1,10 @@
+## 0.0.6 (April 18, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.0.5 –> 0.0.6
+- Remplacement TextInput par Placeholder dans le formulaire de rechercher dans l'annuaire.
+- Ajustements sur page de recherche dans l'annuaire et le formulaire associé pour tenir compte de l'existence en base de l'utilisateur et/ou du marin. Ajustement de l'attribute fullNameAndGrade du modèle Marin.
+- Retrait action de etst de la liste des marins.
+- Renvoie du formulaire de la page de recherche dans l'annuaire dans une classe séparée pour clarifier le code.
+
 ## 0.0.5 (April 16, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.0.4 –> 0.0.5
 - Ajustement de la factory des Marin et des tests pour tout mettre en cohérence.
