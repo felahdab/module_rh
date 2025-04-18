@@ -2,10 +2,6 @@
 
 namespace Modules\RH\Filament\RH\Pages\RechercheAnnuaireForms;
 
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Wizard;
 use Filament\Forms;
 use Filament\Forms\Get;
 
@@ -22,26 +18,46 @@ class RechercheAnnuaireCreateUserOrMarinForm
     public static function getSchema()
     {
     return [
-        Wizard\Step::make('Utilisateur')
+        Forms\Components\Wizard\Step::make('Utilisateur')
                 ->schema([
-                Toggle::make('user')
-                    ->visible(fn () => auth()->user()->can('create', User::class))
+                Forms\Components\TextInput::make('utilisateur_deja_connu')
+                    ->label("Un utilisateur avec cette adresse email est déjà connu")
+                    ->disabled()
+                    ->visible(fn($record) => User::where('email', $record->email)->first() != null)
+                    ->placeholder(function($record) 
+                    {
+                        $user = User::where('email', $record->email)->first();
+                        return $user->display_name . '/' . $user->email ;
+                    }),
+                Forms\Components\Toggle::make('user')
+                    ->hidden(fn ($record) => ! auth()->user()->can('create', User::class) || User::where('email', $record->email)->first() != null)
                     ->label("Créér un compte utilisateur ?")
                     ->live(),
-                Select::make('roles')
+                Forms\Components\Select::make('roles')
+                    ->hidden(fn ($record) => ! auth()->user()->can('create', User::class) || User::where('email', $record->email)->first() != null)
                     ->disabled(fn (Get $get) => ! $get('user'))
                     ->label("Rôles à attribuer")
                     ->options(Role::all()->pluck('name', 'id'))
                     ->multiple()
                     ->requiredIf('user', true)
                 ]),
-        Wizard\Step::make('Marin')
+        Forms\Components\Wizard\Step::make('Marin')
             ->schema([
-                Toggle::make('marin')
-                    ->visible(fn () => auth()->user()->can('create', Marin::class))
+                Forms\Components\TextInput::make('marin_deja_connu')
+                    ->label("Un marin avec ce NID est déjà présent en base")
+                    ->disabled()
+                    ->visible(fn($record) => Marin::where('nid', $record->nid)->first() != null)
+                    ->placeholder(function($record) 
+                    {
+                        $marin = Marin::where('nid', $record->nid)->first();
+                        return $marin->nom . ' ' . $marin->prenom . ' / ' . $marin->nid ;
+                    }),
+                Forms\Components\Toggle::make('marin')
+                    ->visible(fn ($record) => auth()->user()->can('create', Marin::class) && Marin::where('nid', $record->nid)->first() == null)
                     ->label("Créér une fiche Marin ?")
                     ->live(),
-                Section::make('Données complémentaires pour la fiche du marin')
+                Forms\Components\Section::make('Données complémentaires pour la fiche du marin')
+                    ->visible(fn ($record) => auth()->user()->can('create', Marin::class) && Marin::where('nid', $record->nid)->first() == null)
                     ->disabled(fn (Get $get) => ! $get('marin'))
                     ->columns(4)
                     ->schema(

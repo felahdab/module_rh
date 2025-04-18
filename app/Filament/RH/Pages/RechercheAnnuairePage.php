@@ -39,7 +39,7 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
                     return auth()->check();
                 })
                 ->icon('heroicon-o-plus')
-                ->label("Créé une fiche Marin et/ou un utilisateur local")
+                ->label("Créé un utilisateur local et/ou une fiche de marin")
                 ->requiresConfirmation()
                 ->modalWidth(Enums\MaxWidth::SevenExtraLarge)
                 ->form([Wizard::make()->schema(RechercheAnnuaireCreateUserOrMarinForm::getSchema())])

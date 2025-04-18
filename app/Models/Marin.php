@@ -144,9 +144,9 @@ class Marin extends Model
      * Accessor pour nom complet
      * @return string
      */
-    public function getFullName2Attribute()
+    public function getFullNameAndGradeAttribute()
     {
-        $gradeName = $this->grade->libelle_court ??' N/A';
+        $gradeName = $this->grade?->libelle_court ??'N/A';
         return $this->nom.' '.$this->prenom.' ('.$gradeName.')';
     }
 
