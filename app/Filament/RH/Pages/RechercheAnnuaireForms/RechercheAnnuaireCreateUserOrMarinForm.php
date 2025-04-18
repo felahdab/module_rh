@@ -20,11 +20,11 @@ class RechercheAnnuaireCreateUserOrMarinForm
     return [
         Forms\Components\Wizard\Step::make('Utilisateur')
                 ->schema([
-                Forms\Components\TextInput::make('utilisateur_deja_connu')
+                Forms\Components\Placeholder::make('utilisateur_deja_connu')
                     ->label("Un utilisateur avec cette adresse email est déjà connu")
                     ->disabled()
                     ->visible(fn($record) => User::where('email', $record->email)->first() != null)
-                    ->placeholder(function($record) 
+                    ->content(function($record) 
                     {
                         $user = User::where('email', $record->email)->first();
                         return $user->display_name . '/' . $user->email ;
@@ -43,11 +43,11 @@ class RechercheAnnuaireCreateUserOrMarinForm
                 ]),
         Forms\Components\Wizard\Step::make('Marin')
             ->schema([
-                Forms\Components\TextInput::make('marin_deja_connu')
+                Forms\Components\Placeholder::make('marin_deja_connu')
                     ->label("Un marin avec ce NID est déjà présent en base")
                     ->disabled()
                     ->visible(fn($record) => Marin::where('nid', $record->nid)->first() != null)
-                    ->placeholder(function($record) 
+                    ->content(function($record) 
                     {
                         $marin = Marin::where('nid', $record->nid)->first();
                         return $marin->nom . ' ' . $marin->prenom . ' / ' . $marin->nid ;
