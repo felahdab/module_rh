@@ -39,7 +39,7 @@ class RHPanelProvider extends PanelProvider
             ->id('RH')
             ->path($this->prefix . '/rh')
             ->colors([
-                'primary' => Color::Teal,
+                'primary' => Color::Cyan,
             ])
             ->font('Inter', provider: SpatieGoogleFontProvider::class)
             ->defaultAvatarProvider(AnnudefAvatarProvider::class)

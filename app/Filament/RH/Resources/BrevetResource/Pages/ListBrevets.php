@@ -16,4 +16,5 @@ class ListBrevets extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+    
 }
