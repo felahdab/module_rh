@@ -62,7 +62,7 @@ class CreationUtilisateurDepuisMarinTest extends TestCase
             'nom' => 'Test Nom',
             'prenom' => 'Test Prenom',
             'email' => 'NID12345@example.com',
-            'data' => ['status' => 'pending'],
+            'data' => ['status' => 'uuid_confirmed'],
         ]);
 
         // Vérifier que le marin n'a pas encore d'utilisateur associé
