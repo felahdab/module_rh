@@ -9,6 +9,7 @@ use Filament\Resources\Pages\EditRecord;
 class EditSpecialite extends EditRecord
 {
     protected static string $resource = SpecialiteResource::class;
+    protected static ?string $title = 'Modifier spécialité';
 
     protected function getHeaderActions(): array
     {

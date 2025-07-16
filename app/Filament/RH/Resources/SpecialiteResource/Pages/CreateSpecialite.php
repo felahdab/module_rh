@@ -9,4 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateSpecialite extends CreateRecord
 {
     protected static string $resource = SpecialiteResource::class;
+    protected static ?string $title = 'Créer spécialité';
 }
