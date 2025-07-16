@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ListRecords;
 class ListBrevets extends ListRecords
 {
     protected static string $resource = BrevetResource::class;
+    protected static ?string $title = 'Brevets';
 
     protected function getHeaderActions(): array
     {

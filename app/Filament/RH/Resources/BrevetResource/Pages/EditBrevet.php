@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class EditBrevet extends EditRecord
 {
     protected static string $resource = BrevetResource::class;
+    protected static ?string $title = 'Modifier brevet';
 
     protected function getHeaderActions(): array
     {

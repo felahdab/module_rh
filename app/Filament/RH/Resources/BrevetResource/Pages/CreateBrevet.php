@@ -11,6 +11,7 @@ use Modules\RH\Models\Brevet;
 class CreateBrevet extends CreateRecord
 {
     protected static string $resource = BrevetResource::class;
+    protected static ?string $title = 'Créer brevet';
 
     // faire en sorte que l'ordre se décale si insertion au milieu.
     protected function handleRecordCreation(array $data): Model
