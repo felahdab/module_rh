@@ -9,4 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateTypeUnite extends CreateRecord
 {
     protected static string $resource = TypeUniteResource::class;
+    protected static ?string $title = "Créer type d'unité";
 }
