@@ -18,6 +18,6 @@ class SettingSeeder extends Seeder
      */
     public function run()
     {
-        Setting::create(["key" => "rh"]);
+        Setting::firstOrCreate(["key" => "rh"]);
     }
 }

@@ -19,6 +19,8 @@ class GradeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Categories';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -58,6 +60,11 @@ class GradeResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('libelle_long')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('marins_count')
+                    ->label('Nb Marins')
+                    ->counts('marins')
+                    ->sortable()
+                    ->badge(),        
                 Tables\Columns\TextColumn::make('ordre')
                     ->numeric()
                     ->sortable(),

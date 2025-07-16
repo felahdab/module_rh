@@ -13,18 +13,19 @@ class Brevet extends Model
 {
     use HasFactory;
 	use HasTablePrefix;
-	use HasUuids;
-/** 
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'id',
-        'libelle_court',
-        'libelle_long',
-        'ordre',
-        'data',
-    ];
+	
+	protected $fillable = [
+		'id',
+		'uuid',
+		'libelle_long',
+		'libelle_court',
+		'ordre',
+		'data'
+	];
+
+	public function marins()
+	{
+		return $this->hasMany(Marin::class, 'brevet_id', 'id');
+	}
 }
 

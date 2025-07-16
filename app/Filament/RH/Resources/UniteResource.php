@@ -12,6 +12,10 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Select;
 
 class UniteResource extends Resource
 {
@@ -19,22 +23,33 @@ class UniteResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Categories';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('libelle_court')
+                TextInput::make('libelle_court')
                     ->required()
                     ->maxLength(10)
                     ->default(''),
-                Forms\Components\TextInput::make('libelle_long')
+                TextInput::make('libelle_long')
                     ->required()
                     ->maxLength(100)
                     ->default(''),
-                Forms\Components\TextInput::make('ordre')
+
+                // Liaison entre Unite et Type Unite
+                Select::make('type_unite_id')
+                    ->relationship(name: 'typeUnite', titleAttribute: 'libelle_long'),   
+                // Categorie Mere Fille     
+                Select::make('id_mere')
+                    ->label('Categorie Mere')
+                    ->relationship(name: 'parent', titleAttribute: 'libelle_long'),    
+               
+                TextInput::make('ordre')
                     ->required()
                     ->numeric(),
-                Forms\Components\Textarea::make('data')
+                Textarea::make('data')
                     ->columnSpanFull(),
             ]);
     }
@@ -43,30 +58,42 @@ class UniteResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label('ID')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('libelle_court')
+                TextColumn::make('libelle_court')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('libelle_long')
+                TextColumn::make('libelle_long')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('ordre')
+                TextColumn::make('marins_count')
+                    ->label('Nb Marins')
+                    ->counts('marins')
+                    ->sortable()
+                    ->badge(),        
+                TextColumn::make('typeUnite.libelle_court')
+                    ->searchable(),  
+                TextColumn::make('parent.libelle_court')
+                    ->label('Categorie')
+                    ->searchable(),         
+                TextColumn::make('ordre')
                     ->numeric()
                     ->sortable(),
+                
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -91,3 +118,6 @@ class UniteResource extends Resource
         ];
     }
 }
+
+
+
