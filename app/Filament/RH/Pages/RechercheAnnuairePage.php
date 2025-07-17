@@ -31,6 +31,9 @@ use Modules\RH\Filament\RH\Pages\RechercheAnnuaireforms\RechercheAnnuaireCreateU
 
 class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
 {
+    protected static ?string $navigationGroup = 'Marins';
+    protected static ?string $navigationLabel= 'Recherche Annudef';
+
     public function getRowActions()
     {
         return [

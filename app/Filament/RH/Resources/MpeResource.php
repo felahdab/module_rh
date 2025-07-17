@@ -21,9 +21,8 @@ class MpeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Categories';
-
-    protected static ?string $navigationLabel= 'Liste MPE';
+    protected static ?string $navigationGroup = 'Marins';
+    protected static ?string $navigationLabel= 'MPE';
 
     protected static ?string $modelLabel= 'Liste MPE';
 
