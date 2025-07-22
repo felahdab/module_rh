@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Modules\RH\Models\User;
+Use App\Models\User as BaseUser;
 
 use Modules\RH\Traits\HasTablePrefix;
 use Modules\RH\Jobs\ConfirmMarinUuidJob;
@@ -61,6 +62,7 @@ class Marin extends Model
             // Modification de la regle status pour les Tests (pour pouvoir mettre un autre status lors de la creation)
             // $data = ["status" => "pending_uuid_confirmation"];
             // $marin->data = $data;
+            
             if (empty($marin->data)){
                 $marin->data = ["status" => "pending_uuid_confirmation"];
             }
@@ -136,6 +138,24 @@ class Marin extends Model
 
     }
 
+    public static function fromCurrentUser(): Marin|null
+    {
+        if (! auth()->check())
+        {
+            return null;
+        }
+        $user = auth()->user();
+
+        return static::fromUser($user);
+    }
+
+    public static function fromUser(BaseUser $user): Marin|null
+    {
+        $marin =  static::where("user_id", $user->id)->first();
+
+        return $marin;
+    }
+
     /////////////
     // JULIEN  //
     /////////////
@@ -168,7 +188,7 @@ class Marin extends Model
         if(!empty($data['data'])){
             $values['data']=json_encode($data['data']);
         }else{
-            $values['prenom']=json_encode(['status' => 'pending_uuid_confirmation']);
+            $values['data']=json_encode(['status' => 'pending_uuid_confirmation']);
         }
 
         $values['uuid']     = $data['uuid'] ?? 'UUID Test';
