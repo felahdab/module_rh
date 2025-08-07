@@ -10,6 +10,8 @@ class ListTypeUnites extends ListRecords
 {
     protected static string $resource = TypeUniteResource::class;
 
+    protected static ?string $title = "Types d'unité";
+
     protected function getHeaderActions(): array
     {
         return [

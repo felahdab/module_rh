@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ListRecords;
 class ListUnites extends ListRecords
 {
     protected static string $resource = UniteResource::class;
+    protected static ?string $title = 'Unités';
 
     protected function getHeaderActions(): array
     {

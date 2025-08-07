@@ -20,6 +20,8 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Notifications\Notification;
 
+use Filament\Tables\Columns\IconColumn;
+
 
 
 use Modules\RH\Jobs\ConfirmMarinUuidJob;
@@ -27,6 +29,10 @@ use Modules\RH\Jobs\ConfirmMarinUuidJob;
 class MarinResource extends Resource
 {
     protected static ?string $model = Marin::class;
+
+    protected static ?string $navigationGroup = 'Marins';
+    protected static ?string $navigationLabel= 'Marins';
+
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
@@ -47,75 +53,89 @@ class MarinResource extends Resource
                 TextInput::make('nom')
                     ->required()
                     ->autofocus()
-                    ->maxLength(255),
+                    ->maxLength(1500)
+                    ->label('Nom'),
+                Select::make('grade_id')
+                    ->relationship('grade', 'libelle_long', fn($query) => $query->orderBy('ordre'))
+                    ->label('Grade'),
                 TextInput::make('prenom')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(1000)
+                    ->label('Prénom'),
+                Select::make('brevet_id')
+                    ->relationship('brevet', 'libelle_long', fn($query) => $query->orderBy('ordre'))
+                    ->label('Brevet'),
                 TextInput::make('email')
                     ->unique(
                         table: 'rh_marins',
                         column: 'email',
                         ignoreRecord : true
                     )
-                    ->required(),
+                    ->required()
+                    ->label('Email'),
+                Select::make('specialite_id')
+                    ->relationship('specialite', 'libelle_court', fn($query) => $query->orderBy('libelle_court'))
+                    ->label('Spécialité'),
                 TextInput::make('matricule')
                     ->maxLength(20)
-                    ->default(''),
+                    ->default('')
+                    ->label('Matricule'),
+                Select::make('unite_id')
+                    ->relationship('unite', 'libelle_court', fn($query) => $query->orderBy('libelle_court'))
+                    ->label('Unité'),
                 TextInput::make('nid')
                     ->maxLength(15)
-                    ->default(''),
-                DatePicker::make('date_embarq'),
-                DatePicker::make('date_debarq'),
-                Select::make('grade_id')
-                    ->relationship(name: 'grade', titleAttribute: 'libelle_long'),
-                Select::make('specialite_id')
-                    ->relationship(name: 'specialite', titleAttribute: 'libelle_court'),
-                Select::make('brevet_id')
-                    ->relationship(name: 'brevet', titleAttribute: 'libelle_long'),
-                Select::make('unite_id')
-                    ->relationship(name: 'unite', titleAttribute: 'libelle_long'),
-                
+                    ->default('')
+                    ->label('NID'),
+                // DatePicker::make('date_embarq'),
+                // DatePicker::make('date_debarq'),
+                 
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('nom','asc')
             ->columns([
                 TextColumn::make('id')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('ID')
                     ->searchable(),
-                TextColumn::make('nom')
-                    ->searchable(),
-                TextColumn::make('prenom')
-                    ->searchable(),
-                TextColumn::make('matricule')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->searchable(),
-                TextColumn::make('nid')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->searchable(),
-                TextColumn::make('date_embarq')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->date()
-                    ->sortable(),
-                TextColumn::make('date_debarq')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->date()
-                    ->sortable(),
                 TextColumn::make('grade.libelle_court')
                     ->searchable()
-                    ->badge(),
-                TextColumn::make('specialite.libelle_court')
-                    ->searchable()
-                    ->badge(),
+                    ->label('Grade'),
                 TextColumn::make('brevet.libelle_court')
                     ->searchable()
-                    ->badge(),
+                    ->label('Brevet'),
+                TextColumn::make('specialite.libelle_court')
+                    ->searchable()
+                    ->label('Spécialité'),
+                TextColumn::make('nom')
+                    ->searchable()
+                    ->label('Nom'),
+                TextColumn::make('prenom')
+                    ->searchable()
+                    ->label('Prénom'),
                 TextColumn::make('unite.libelle_court')
                     ->searchable()
-                    ->badge(),
+                    ->label('Unité'),
+                TextColumn::make('matricule')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable()
+                    ->label('Matricule'),
+                TextColumn::make('nid')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable()
+                    ->label('NID'),
+                // TextColumn::make('date_embarq')
+                //     ->toggleable(isToggledHiddenByDefault: true)
+                //     ->date()
+                //     ->sortable(),
+                // TextColumn::make('date_debarq')
+                //     ->toggleable(isToggledHiddenByDefault: true)
+                //     ->date()
+                //     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -139,15 +159,33 @@ class MarinResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                ->iconButton()
+                ->icon('heroicon-m-pencil-square')
+                ->extraAttributes([
+                    'title' => 'Modifier',
+                    'class' => 'btn-modif',
+                    ]),
                 Tables\Actions\Action::make('associer-a-un-utilisateur')
-                    ->url(
-                        function($record)
-                        {
-                            return Pages\AssociateMarin::getUrl(["record" => $record]);
-                        }
-                    ),
+                ->iconButton()
+                ->icon('heroicon-m-users')
+                ->extraAttributes([
+                    'title' => 'Associer à un utilisateur',
+                    'class' => 'btn-modif',
+                    ])
+                ->url(
+                    function($record)
+                    {
+                        return Pages\AssociateMarin::getUrl(["record" => $record]);
+                    }
+                ),
                 Tables\Actions\Action::make('verifier-avec-serveur-distant')
+                    ->iconButton()
+                    ->icon('heroicon-m-server-stack')
+                    ->extraAttributes([
+                        'title' => 'Vérifier avec le serveur distant',
+                        'class' => 'btn-modif',
+                        ])
                     ->action(function(Marin $record)
                     {
                         ConfirmMarinUuidJob::dispatch($record->uuid);
@@ -156,6 +194,12 @@ class MarinResource extends Resource
                 // Bouton pour creer un user 
                 Tables\Actions\Action::make('createUser')
                     ->label('Créer Utilisateur')
+                    ->iconButton()
+                    ->icon('heroicon-m-user-plus')
+                    ->extraAttributes([
+                        'title' => "Créer un compte de connexion",
+                        'class' => 'btn-modif',
+                        ])
                     //->label('')
                     //->icon($icon = 'heroicon-o-user-add')
                     ->action(function (Marin $record) {

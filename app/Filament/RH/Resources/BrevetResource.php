@@ -13,13 +13,16 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Notification;
+
 class BrevetResource extends Resource
 {
     protected static ?string $model = Brevet::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Categories';
+    protected static ?string $navigationGroup = 'Gestion';
 
     public static function form(Form $form): Form
     {
@@ -28,16 +31,19 @@ class BrevetResource extends Resource
                 Forms\Components\TextInput::make('libelle_court')
                     ->required()
                     ->maxLength(10)
-                    ->default(''),
+                    ->default('')
+                    ->label('Libellé court'),
                 Forms\Components\TextInput::make('libelle_long')
                     ->required()
                     ->maxLength(100)
-                    ->default(''),
+                    ->default('')
+                    ->label('Libellé long'),
                 Forms\Components\TextInput::make('ordre')
                     ->required()
-                    ->numeric(),
-                Forms\Components\Textarea::make('data')
-                    ->columnSpanFull(),
+                    ->numeric()
+                    ->label('Ordre'),
+                // Forms\Components\Textarea::make('data')
+                //     ->columnSpanFull(),
             ]);
     }
 
@@ -47,7 +53,23 @@ class BrevetResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('libelle_court')
+                    ->label('Libellé court')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('libelle_long')
+                    ->label('Libellé long')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('ordre')
+                    ->numeric()
+                    ->sortable()
+                    ->label('Ordre'),
+                Tables\Columns\TextColumn::make('marins_count')
+                    ->label('Nb Marins')
+                    ->counts('marins')
+                    ->sortable()
+                    ->badge(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -56,31 +78,58 @@ class BrevetResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('libelle_court')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('libelle_long')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('marins_count')
-                    ->label('Nb Marins')
-                    ->counts('marins')
-                    ->sortable()
-                    ->badge(),    
-                Tables\Columns\TextColumn::make('ordre')
-                    ->numeric()
-                    ->sortable(),
             ])
+            ->defaultSort('ordre', 'asc')
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->iconButton()
+                    ->icon('heroicon-m-pencil-square')
+                    ->extraAttributes([
+                    'title' => 'Modifier',
+                    'class' => 'btn-modif',
+                    ]),
+                
+                Tables\Actions\DeleteAction::make()
+                    ->iconButton()
+                    ->icon('heroicon-m-trash')
+                    ->extraAttributes([
+                        'title' => 'Supprimer',
+                        'class' => 'btn-suppr',
+                        ])
+                    ->before(function (Tables\Actions\DeleteAction $action, Brevet $record) {
+                        $ordre=$record->ordre;
+                        $list_brevets=Brevet::all();
+                        foreach($list_brevets as $brevet){
+                            if ($brevet->ordre >= $ordre){
+                                $brevet->ordre --;
+                                $brevet->save();
+                            }
+                        }
+                    }),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            // ->bulkActions([
+            //     Tables\Actions\BulkActionGroup::make([
+            //         Tables\Actions\DeleteBulkAction::make(),
+            //     ])
+            // ])
+            ;
     }
+
+    // protected function getDefaultTableSortColumn(): ?string
+    // {
+    //     return 'ordre';
+    // }
+    // protected function getDefaultTableSortDirection(): ?string
+    // {
+    //     return 'asc';
+    // }
+    // protected function shouldPersistTableSortInSession(): bool
+    // {
+    //     return true;
+    // }
 
     public static function getRelations(): array
     {
@@ -97,4 +146,35 @@ class BrevetResource extends Resource
             'edit' => Pages\EditBrevet::route('/{record}/edit'),
         ];
     }
+
+    // protected function getActions(): array
+    // {
+    //     // return [
+    //         dd('toto');
+    //     Actions\DeleteAction::make()
+        
+    //     ->before(function (DeleteAction $action) {
+    //         
+    //             dd($action);
+    //         
+    //     })
+    // // ]
+    // ;
+    // }
+
+    // protected function handleRecordDelation(array $data): Model
+    // {
+    //     dd('toto');
+    //     $ordre=$data['ordre'];
+    //     $list_brevets=Brevet::all();
+    //     foreach($list_brevets as $brevet){
+    //         if ($brevet->ordre >= $ordre){
+    //             $brevet->ordre --;
+    //             $brevet->save();
+    //         }
+    //     }
+    //     return static::getModel()::delete($data);
+    // }
+
+
 }

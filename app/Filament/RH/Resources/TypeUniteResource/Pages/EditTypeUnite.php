@@ -9,11 +9,12 @@ use Filament\Resources\Pages\EditRecord;
 class EditTypeUnite extends EditRecord
 {
     protected static string $resource = TypeUniteResource::class;
+    protected static ?string $title = "Modifier type d'unité";
 
     protected function getHeaderActions(): array
     {
         return [
-            //Actions\DeleteAction::make(),
+            Actions\DeleteAction::make(),
         ];
     }
 }

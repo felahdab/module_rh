@@ -23,7 +23,8 @@ class TypeUniteResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Categories';
+    protected static ?string $navigationGroup = 'Gestion';
+    protected static ?string $navigationLabel = "Types d'unités";
 
     public static function form(Form $form): Form
     {
@@ -32,16 +33,18 @@ class TypeUniteResource extends Resource
                 TextInput::make('libelle_court')
                     ->required()
                     ->maxLength(10)
-                    ->default(''),
+                    ->default('')
+                    ->label('Libellé court'),
                 TextInput::make('libelle_long')
                     ->required()
                     ->maxLength(100)
-                    ->default(''),
-                TextInput::make('ordre')
-                    ->required()
-                    ->numeric(),
-                Textarea::make('data')
-                    ->columnSpanFull(),
+                    ->default('')
+                    ->label('Libellé long'),
+                // TextInput::make('ordre')
+                //     ->required()
+                //     ->numeric(),
+                // Textarea::make('data')
+                //     ->columnSpanFull(),
             ]);
     }
 
@@ -51,7 +54,16 @@ class TypeUniteResource extends Resource
             ->columns([
                 TextColumn::make('id')
                     ->label('ID')
-                    ->searchable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('libelle_court')
+                    ->searchable()
+                    ->label('Libellé court'),
+                TextColumn::make('libelle_long')
+                    ->searchable()
+                    ->label('Libellé long'),
+                // TextColumn::make('ordre')
+                //     ->numeric()
+                //     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -60,27 +72,33 @@ class TypeUniteResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('libelle_court')
-                    ->searchable(),
-                TextColumn::make('libelle_long')
-                    ->searchable(),
-                TextColumn::make('ordre')
-                    ->numeric()
-                    ->sortable(),
 
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->iconButton()
+                    ->icon('heroicon-m-pencil-square')
+                    ->extraAttributes([
+                        'title' => 'Modifier',
+                        'class' => 'btn-modif',
+                        ]),
+                Tables\Actions\DeleteAction::make()
+                    ->iconButton()
+                    ->icon('heroicon-m-trash')
+                    ->extraAttributes([
+                        'title' => 'Supprimer',
+                        'class' => 'btn-suppr',
+                        ]),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            // ->bulkActions([
+            //     Tables\Actions\BulkActionGroup::make([
+            //         Tables\Actions\DeleteBulkAction::make(),
+            //     ]),
+            // ])
+            ;
     }
 
     public static function getRelations(): array

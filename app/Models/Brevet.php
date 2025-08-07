@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 use Modules\RH\Traits\HasTablePrefix;
 
+
 class Brevet extends Model
 {
     use HasFactory;
@@ -27,3 +28,4 @@ class Brevet extends Model
 		return $this->hasMany(Marin::class, 'brevet_id', 'id');
 	}
 }
+
