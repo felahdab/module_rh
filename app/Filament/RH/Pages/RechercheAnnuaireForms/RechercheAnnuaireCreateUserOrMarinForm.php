@@ -35,8 +35,8 @@ class RechercheAnnuaireCreateUserOrMarinForm
                     
                     Forms\Components\Toggle::make('user')
                         ->visible(function ($record) {
-                            // VISIBLE si : (admin OU mentor) ET utilisateur n'existe pas déjà
-                            return (auth()->user()->can('create', User::class) || static::canAccessMentorFeatures()) && 
+                            // VISIBLE seulement si : admin complet ET utilisateur n'existe pas
+                            return static::canAccessAdminMenus() && 
                                    User::where('email', $record->email)->first() == null;
                         })
                         ->label("Créer un compte utilisateur ?")
@@ -44,36 +44,18 @@ class RechercheAnnuaireCreateUserOrMarinForm
                     
                     Forms\Components\Select::make('roles')
                         ->visible(function ($record, Get $get) {
-                            // VISIBLE si : (admin OU mentor) ET utilisateur n'existe pas ET toggle activé
-                            return (auth()->user()->can('create', User::class) || static::canAccessMentorFeatures()) && 
+                            // VISIBLE seulement si : admin complet ET utilisateur n'existe pas ET toggle activé
+                            return static::canAccessAdminMenus() && 
                                    User::where('email', $record->email)->first() == null &&
                                    $get('user') === true;
                         })
                         ->label("Rôles à attribuer")
                         ->options(function() {
-                            // Si mentor (pas admin complet), limiter les rôles
-                            if (static::canAccessMentorFeatures() && !auth()->user()->can('create', User::class)) {
-                                return Role::whereIn('name', [
-                                    'fcmcentral::user',
-                                    'fcmcentral::mentor',
-                                    'basic-user',
-                                    'user'
-                                ])->pluck('name', 'id');
-                            }
-                            
-                            // Tous les rôles pour les admins
                             return Role::all()->pluck('name', 'id');
                         })
                         ->multiple()
                         ->requiredIf('user', true)
-                        ->default(function() {
-                            // Rôles par défaut pour les mentors
-                            if (static::canAccessMentorFeatures() && !auth()->user()->can('create', User::class)) {
-                                return Role::whereIn('name', ['fcmcentral::user', 'basic-user'])
-                                    ->pluck('id')->toArray();
-                            }
-                            return [];
-                        })
+                        ->default([])
                 ]),
                 
             Forms\Components\Wizard\Step::make('Marin')
@@ -90,8 +72,8 @@ class RechercheAnnuaireCreateUserOrMarinForm
                     
                     Forms\Components\Toggle::make('marin')
                         ->visible(function ($record) {
-                            // VISIBLE si : (admin OU mentor) ET marin n'existe pas déjà
-                            return (auth()->user()->can('create', Marin::class) || static::canAccessMentorFeatures()) && 
+                            // VISIBLE seulement si : admin complet ET marin n'existe pas
+                            return static::canAccessAdminMenus() && 
                                    Marin::where('nid', $record->nid)->first() == null;
                         })
                         ->label("Créer une fiche Marin ?")
@@ -99,8 +81,8 @@ class RechercheAnnuaireCreateUserOrMarinForm
                     
                     Forms\Components\Section::make('Données complémentaires pour la fiche du marin')
                         ->visible(function ($record, Get $get) {
-                            // VISIBLE si : (admin OU mentor) ET marin n'existe pas ET toggle activé
-                            return (auth()->user()->can('create', Marin::class) || static::canAccessMentorFeatures()) && 
+                            // VISIBLE seulement si : admin complet ET marin n'existe pas ET toggle activé
+                            return static::canAccessAdminMenus() && 
                                    Marin::where('nid', $record->nid)->first() == null &&
                                    $get('marin') === true;
                         })
@@ -128,6 +110,14 @@ class RechercheAnnuaireCreateUserOrMarinForm
                                 ->label("Unite")
                                 ->options(Unite::all()->pluck('libelle_long', 'id')),
                         ]),
+                        
+                    // Message informatif pour les non-admins
+                    Forms\Components\Placeholder::make('access_denied')
+                        ->label("Accès limité")
+                        ->visible(function () {
+                            return !static::canAccessAdminMenus();
+                        })
+                        ->content("Seuls les administrateurs peuvent créer des comptes utilisateurs et des fiches marin depuis cette interface."),
                 ]),
         ];
     }
