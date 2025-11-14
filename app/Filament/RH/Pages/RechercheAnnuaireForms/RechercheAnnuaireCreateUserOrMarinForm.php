@@ -36,21 +36,21 @@ class RechercheAnnuaireCreateUserOrMarinForm
                         }),
                    
                     Forms\Components\Toggle::make('user')
-                        ->visible(function ($record) {
-                            // VISIBLE seulement si : admin complet ET utilisateur n'existe pas
-                            return static::canAccessAdminMenus()  &&
-                                   User::where('email', $record->email)->first() == null;
-                        })
+                        // ->visible(function ($record) {
+                        //     // VISIBLE seulement si : admin complet ET utilisateur n'existe pas
+                        //     return static::canAccessAdminMenus()  &&
+                        //            User::where('email', $record->email)->first() == null;
+                        // })
                         ->label("Créer un compte utilisateur ?")
                         ->live(),
                    
                     Forms\Components\Select::make('roles')
-                        ->visible(function ($record, Get $get) {
-                            // VISIBLE seulement si : admin complet ET utilisateur n'existe pas ET toggle activé
-                            return static::canAccessAdminMenus() &&
-                                   User::where('email', $record->email)->first() == null &&
-                                   $get('user') === true;
-                        })
+                        // ->visible(function ($record, Get $get) {
+                        //     // VISIBLE seulement si : admin complet ET utilisateur n'existe pas ET toggle activé
+                        //     return static::canAccessAdminMenus() &&
+                        //            User::where('email', $record->email)->first() == null &&
+                        //            $get('user') === true;
+                        // })
                         ->label("Rôles à attribuer")
                         ->options(function() {
                             return Role::all()->pluck('name', 'id');
@@ -62,9 +62,9 @@ class RechercheAnnuaireCreateUserOrMarinForm
                         // Message informatif pour les non-admins
                     Forms\Components\Placeholder::make('access_denied')
                     ->label("Accès limité")
-                    ->visible(function () {
-                        return !static::canAccessAdminMenus();
-                    })
+                    // ->visible(function () {
+                    //     return !static::canAccessAdminMenus();
+                    // })
                     ->content("Seuls les administrateurs peuvent créer des comptes utilisateurs et des fiches marin depuis cette interface."),
                 ]),
                
@@ -81,21 +81,21 @@ class RechercheAnnuaireCreateUserOrMarinForm
                         }),
                    
                     Forms\Components\Toggle::make('marin')
-                        ->visible(function ($record) {
-                            // VISIBLE seulement si : admin complet ET marin n'existe pas
-                            return static::canAccessAdminMenus() &&
-                                   Marin::where('nid', $record->nid)->first() == null;
-                        })
+                        // ->visible(function ($record) {
+                        //     // VISIBLE seulement si : admin complet ET marin n'existe pas
+                        //     return static::canAccessAdminMenus() &&
+                        //            Marin::where('nid', $record->nid)->first() == null;
+                        // })
                         ->label("Créer une fiche Marin ?")
                         ->live(),
                    
                     Forms\Components\Section::make('Données complémentaires pour la fiche du marin')
-                        ->visible(function ($record, Get $get) {
-                            // VISIBLE seulement si : admin complet ET marin n'existe pas ET toggle activé
-                            return static::canAccessAdminMenus() &&
-                                   Marin::where('nid', $record->nid)->first() == null &&
-                                   $get('marin') === true;
-                        })
+                        // ->visible(function ($record, Get $get) {
+                        //     // VISIBLE seulement si : admin complet ET marin n'existe pas ET toggle activé
+                        //     return static::canAccessAdminMenus() &&
+                        //            Marin::where('nid', $record->nid)->first() == null &&
+                        //            $get('marin') === true;
+                        // })
                         ->columns(4)
                         ->schema([
                             Forms\Components\TextInput::make('nid')
@@ -124,9 +124,9 @@ class RechercheAnnuaireCreateUserOrMarinForm
                     // Message informatif pour les non-admins
                     Forms\Components\Placeholder::make('access_denied')
                         ->label("Accès limité")
-                        ->visible(function () {
-                            return !static::canAccessAdminMenus();
-                        })
+                        // ->visible(function () {
+                        //     return !static::canAccessAdminMenus();
+                        // })
                         ->content("Seuls les administrateurs peuvent créer des comptes utilisateurs et des fiches marin depuis cette interface."),
                 ]),
         ];
