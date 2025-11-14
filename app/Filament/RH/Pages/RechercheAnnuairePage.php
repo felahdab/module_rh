@@ -91,7 +91,7 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
         return [
             BulkAction::make('create-local-user')
                 ->visible(function(){
-                    return auth()->check() && auth()->user()->can('users.store');
+                   // return auth()->check() && auth()->user()->can('users.store');
                 })
                 ->icon('heroicon-o-plus')
                 ->label("Créé l'utilisateur local")
