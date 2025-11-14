@@ -16,6 +16,8 @@ use Filament\Support\Enums;
 
 use Illuminate\support\Arr;
 
+use Illuminate\support\Facades\Log;
+
 use App\Events\UnUtilisateurLocalDoitEtreCreeEvent;
 use Modules\RH\Events\UnMarinDoitEtreCreeEvent;
 
@@ -47,6 +49,9 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
                 ->modalWidth(Enums\MaxWidth::SevenExtraLarge)
                 ->form([Wizard::make()->schema(RechercheAnnuaireCreateUserOrMarinForm::getSchema())])
                 ->action(function ($record, $data){
+
+                    dd($record);
+                    //log::info($record);
                     // array:11 [▼ // vendor/spatie/laravel-ignition/src/helpers.php:14
                     //   "marin" => true
                     //   "matricule" => "123"
