@@ -20,7 +20,7 @@ class RHDatabaseSeeder extends Seeder
             TypeUniteSeeder::class,
             UniteSeeder::class,
             //MarinSeeder::class,
-            MpeSeeder::class,
+            //MpeSeeder::class,
         ]);
     }
 }
