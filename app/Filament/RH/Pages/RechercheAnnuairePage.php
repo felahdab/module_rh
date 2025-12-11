@@ -50,7 +50,7 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
                 ->form([Wizard::make()->schema(RechercheAnnuaireCreateUserOrMarinForm::getSchema())])
                 ->action(function ($record, $data){
 
-                    dd($record);
+                   // dd($record);
                     //log::info($record);
                     // array:11 [▼ // vendor/spatie/laravel-ignition/src/helpers.php:14
                     //   "marin" => true
