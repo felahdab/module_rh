@@ -20,10 +20,9 @@ class RechercheAnnuaireCreateUserOrMarinForm
  
     public static function getSchema()
     {
-       
-        return [
-            
-            Forms\Components\Wizard\Step::make('Utilisateur')
+    return [
+        Forms\Components\Wizard\Step::make('Utilisateur')
+                ->hidden(fn ($record) => ! auth()->user()->can('create', User::class) || User::where('email', $record->email)->first() != null)
                 ->schema([
                     Forms\Components\Placeholder::make('utilisateur_deja_connu')
                         ->label("Un utilisateur avec cette adresse email est déjà connu")
@@ -71,6 +70,7 @@ class RechercheAnnuaireCreateUserOrMarinForm
                  ]),
                
             Forms\Components\Wizard\Step::make('Marin')
+                ->visible(fn ($record) => auth()->user()->can('create', Marin::class) && Marin::where('nid', $record->nid)->first() == null)
                 ->schema([
                     Forms\Components\Placeholder::make('marin_deja_connu')
                         ->label("Un marin avec ce NID est déjà présent en base")
