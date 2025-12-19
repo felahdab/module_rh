@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use Modules\RH\Traits\HasTablePrefix;
+use Modules\RH\Database\Factories\SpecialiteFactory;
 
 
 class Specialite extends Model
@@ -26,4 +27,9 @@ class Specialite extends Model
 	{
 		return $this->hasMany(Marin::class, 'specialite_id', 'id');
 	}
+
+    protected static function newFactory(): SpecialiteFactory
+    {
+        return SpecialiteFactory::new();
+    }
 }

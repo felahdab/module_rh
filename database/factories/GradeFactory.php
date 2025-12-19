@@ -3,6 +3,7 @@
 namespace Modules\RH\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 use Modules\RH\Models\Grade;
 
 /**
@@ -22,9 +23,10 @@ class GradeFactory extends Factory
     public function definition()
     {
         return [
-            'grade_libcourt' =>$this->faker->text(5) ,
-	    'grade_liblong' =>$this->faker->name(),
-	    'ordre_classmt' => 1,
+            'uuid' => Str::uuid(),
+            'libelle_court' =>$this->faker->text(5),
+            'libelle_long' =>$this->faker->name(),
+	        'ordre' => 1,
         ];
     }
 }

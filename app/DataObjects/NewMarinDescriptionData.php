@@ -4,6 +4,7 @@ namespace Modules\RH\DataObjects;
 
 use Spatie\LaravelData\Data;
 
+/** @phpstan-consistent-constructor */
 class NewMarinDescriptionData extends Data
 {
     public function __construct(

@@ -26,7 +26,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
             'remember_token' => Str::random(10),
-            'uuid' => $this->faker->randomNumber(6, true),
+            'uuid' => Str::uuid(),
         ];
     }
 }

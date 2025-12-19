@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Modules\RH\Traits\HasTablePrefix;
 use Modules\RH\Models\Marin;
 
+use Modules\RH\Database\Factories\GradeFactory;
+
+
 class Grade extends Model
 {
     use HasFactory;
@@ -28,4 +31,9 @@ class Grade extends Model
 	{
 		return $this->hasMany(Marin::class, 'grade_id', 'id');
 	}
+
+	protected static function newFactory(): GradeFactory
+    {
+        return GradeFactory::new();
+    }
 }
