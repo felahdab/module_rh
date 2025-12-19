@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 use Modules\RH\Traits\HasTablePrefix;
+use Modules\RH\Database\Factories\BrevetFactory;
 
 
 class Brevet extends Model
@@ -27,5 +28,10 @@ class Brevet extends Model
 	{
 		return $this->hasMany(Marin::class, 'brevet_id', 'id');
 	}
+
+	protected static function newFactory(): BrevetFactory
+    {
+        return BrevetFactory::new();
+    }
 }
 
