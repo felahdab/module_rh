@@ -48,6 +48,9 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
                 ->requiresConfirmation()
                 ->modalWidth(Enums\MaxWidth::SevenExtraLarge)
                 ->form([Wizard::make()->schema(RechercheAnnuaireCreateUserOrMarinForm::getSchema())])
+                ->fillForm(fn ($record): array => [
+                    'nid' => $record->nid,
+                ])
                 ->action(function ($record, $data){
 
                    // dd($record);
