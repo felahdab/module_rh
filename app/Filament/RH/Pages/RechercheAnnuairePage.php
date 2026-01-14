@@ -14,9 +14,9 @@ use Filament\Forms;
 use Filament\Forms\Get;
 use Filament\Support\Enums;
 
-use Illuminate\support\Arr;
+use Illuminate\Support\Arr;
 
-use Illuminate\support\Facades\Log;
+use Illuminate\Support\Facades\Log;
 
 use App\Events\UnUtilisateurLocalDoitEtreCreeEvent;
 use Modules\RH\Events\UnMarinDoitEtreCreeEvent;
@@ -29,7 +29,9 @@ use Modules\RH\Models\Specialite;
 use Modules\RH\Models\Brevet;
 use Modules\RH\Models\Unite;
 
-use Modules\RH\Filament\RH\Pages\RechercheAnnuaireforms\RechercheAnnuaireCreateUserOrMarinForm;
+use Modules\RH\Services\AnnudefGradeService;
+
+use Modules\RH\Filament\RH\Pages\RechercheAnnuaireForms\RechercheAnnuaireCreateUserOrMarinForm;
 
 class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
 {
@@ -48,6 +50,10 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
                 ->requiresConfirmation()
                 ->modalWidth(Enums\MaxWidth::SevenExtraLarge)
                 ->form([Wizard::make()->schema(RechercheAnnuaireCreateUserOrMarinForm::getSchema())])
+                ->fillForm(fn ($record): array => [
+                    'nid' => $record->nid,
+                    'grade_id' => AnnudefGradeService::getGradeFromAnnudefRank($record->gradelong) ?->id
+                ])
                 ->action(function ($record, $data){
 
                    // dd($record);

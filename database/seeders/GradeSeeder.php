@@ -193,7 +193,7 @@ class GradeSeeder extends Seeder
 			  "created_at" => "2024-11-10T16:42:28.000000Z",
 			  "updated_at" => "2024-11-10T16:42:28.000000Z",
 			  "libelle_court" => "MO1",
-			  "libelle_long" => "Matelot",
+			  "libelle_long" => "Matelot de 1ère classe",
 			  "ordre" => 1,
 			  "data" => null,
 			],

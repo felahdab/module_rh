@@ -1,3 +1,19 @@
+## 0.1.1 (January 14, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.1.0 –> 0.1.1
+- Prise en compte du grade présent dans les informations Annudef dans le formulaire de création du Marin.
+
+## 0.1.0 (January 13, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.0.6 –> 0.1.0
+- Prise en compte du NID issu d'ANNUDEF pour pré-remplir le champs NID du formulaire de création de la fiche du Marin.
+- Merge branch 'tuleap-665439-realiser-une-verification-de-qualite-du-code-phpstan'
+- Corrections syntaxiques, suppression de fichiers devenus inutiles.
+- Implements art #658135 : modification Pour formulaire incription
+- Modifcation rech acces permission
+- Modification Recherche Annuaire droits
+- Restauration des fichiers supprimés à tord par le commit du 22/04/2025
+- Création des méthodes pour faciliter le lien entre User et Marin.
+
+
 ## 0.0.6 (April 18, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.0.5 –> 0.0.6
 - Remplacement TextInput par Placeholder dans le formulaire de rechercher dans l'annuaire.

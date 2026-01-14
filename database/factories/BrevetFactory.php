@@ -3,15 +3,17 @@
 namespace Modules\RH\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
+use Modules\RH\Models\Brevet;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Diplome>
  */
-class DiplomeFactory extends Factory
+class BrevetFactory extends Factory
 {
     
-    protected $model = Diplome::class;
+    protected $model = Brevet::class;
 
     /**
      * Define the model's default state.
@@ -21,9 +23,10 @@ class DiplomeFactory extends Factory
     public function definition()
     {
         return [
-            'diplome_libcourt' =>$this->faker->text(5),
-	    'diplome_liblong' =>$this->faker->name(),
-	    'ordre_classmt' => 1,
+            'uuid' => Str::uuid(),
+            'libelle_court' =>$this->faker->text(5),
+            'libelle_long' =>$this->faker->name(),
+	        'ordre' => 1,
         ];
     }
 }
