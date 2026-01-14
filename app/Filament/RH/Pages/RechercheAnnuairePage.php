@@ -29,6 +29,8 @@ use Modules\RH\Models\Specialite;
 use Modules\RH\Models\Brevet;
 use Modules\RH\Models\Unite;
 
+use Modules\RH\Services\AnnudefGradeService;
+
 use Modules\RH\Filament\RH\Pages\RechercheAnnuaireForms\RechercheAnnuaireCreateUserOrMarinForm;
 
 class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
@@ -50,6 +52,7 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
                 ->form([Wizard::make()->schema(RechercheAnnuaireCreateUserOrMarinForm::getSchema())])
                 ->fillForm(fn ($record): array => [
                     'nid' => $record->nid,
+                    'grade_id' => AnnudefGradeService::getGradeFromAnnudefRank($record->gradelong) ?->id
                 ])
                 ->action(function ($record, $data){
 
