@@ -27,6 +27,9 @@ use Modules\RH\Policies\SpecialitePolicy;
 use Modules\RH\Models\Unite;
 use Modules\RH\Policies\UnitePolicy;
 
+use Modules\RH\Models\TypeUnite;
+use Modules\RH\Policies\TypeUnitePolicy;
+
 use Modules\RH\Filament\RH\Resources\MarinResource\Pages\ListMarins;
 
 
@@ -69,7 +72,7 @@ class RHServiceProvider extends ServiceProvider
             Marin::class => MarinPolicy::class,
             Specialite::class => SpecialitePolicy::class,
             Unite::class => UnitePolicy::class,
-
+            TypeUnite::class => TypeUnitePolicy::class
 
         ];
         foreach ($policies as $model => $policy){
@@ -82,11 +85,12 @@ class RHServiceProvider extends ServiceProvider
         app(ModuleDefinedMenusRegistry::class)->registerDirectMenuItems([
             DirectMenuItem::make()
                 ->name('RH')
+                ->visible(fn() => auth()->check() && auth()->user()->can('rh::marins.index'))
                 ->children([
                     DirectMenuItem::make()
                         ->name('Gestion des marins')
                         ->url(fn() => ListMarins::getUrl(panel: "RH"))
-                        ->visible(fn() => ListMarins::canAccess()),
+                        ->visible(function() {return auth()->check() && auth()->user()->can('rh::marins.index'); }),
                 ])
         ]);
    
@@ -98,7 +102,7 @@ class RHServiceProvider extends ServiceProvider
             [
             PreferedPageItem::make()
                 ->name('RH: Gestion des marins')
-                ->visible(fn() => auth()->check() && ListMarins::canAccess())
+                ->visible(fn() => auth()->check() && auth()->user()->can('rh::marins.index'))
                 ->routeName(fn() => ListMarins::getRouteName(panel: 'RH')),
             ]
         );
