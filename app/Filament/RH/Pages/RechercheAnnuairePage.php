@@ -43,7 +43,7 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
         return [
             Action::make('create-local-user-or-marin')
                 ->visible(function(){
-                    return auth()->check();
+                    return auth()->check() && ( auth()->user()->can('create', User::class) || auth()->user()->can('create', Marin::class)) ;
                 })
                 ->icon('heroicon-o-plus')
                 ->label("Créé un utilisateur local et/ou une fiche de marin")

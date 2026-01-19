@@ -26,7 +26,7 @@ use App\Providers\Filament\Traits\UsesSkeletorPrefixAndMultitenancyTrait;
 use App\Http\Middleware\InitializeTenancyByPath;
 use App\Http\Middleware\SetTenantCookieMiddleware;
 use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
-
+use App\Filament\Pages\UserPreferences;
 
 use Filament\Navigation\NavigationItem;
 use Filament\Pages\Dashboard;
@@ -52,6 +52,7 @@ class RHPanelProvider extends PanelProvider
             ->font('Inter', provider: SpatieGoogleFontProvider::class)
             ->defaultAvatarProvider(AnnudefAvatarProvider::class)
             ->brandName("Ressources humaines")
+            ->profile(UserPreferences::class)
             ->discoverResources(in: module_path($this->module, 'app/Filament/RH/Resources'), for: "$moduleNamespace\\Filament\\RH\\Resources")
             ->discoverPages(in: module_path($this->module, 'app/Filament/RH/Pages'), for: "$moduleNamespace\\Filament\\RH\\Pages")
             ->pages([
