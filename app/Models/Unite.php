@@ -23,6 +23,9 @@ class Unite extends Model
 		'ordre',
 		'code_sirh_unite',
 		'id_mere',
+		'type_unite_id',
+		'lieu_unite_id',
+		'libannudef',
 	];
 	
 	public function marins()
@@ -52,5 +55,10 @@ class Unite extends Model
 	{
 		return $this->hasMany(Mpe::class,'unite_id');
 	}
+
+	public function lieuUnite()
+    {
+        return $this->belongsTo(LieuUnite::class, "lieu_unite_id", "id");
+    }
 
 }
