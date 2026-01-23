@@ -6,6 +6,7 @@ use Modules\RH\Filament\RH\Resources\UniteResource\Pages;
 use Modules\RH\Filament\RH\Resources\UniteResource\RelationManagers;
 use Modules\RH\Models\Unite;
 use Modules\RH\Models\TypeUnite;
+use Modules\RH\Models\LieuUnite;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -36,27 +37,30 @@ class UniteResource extends Resource
             ->schema([
                 TextInput::make('libelle_court')
                     ->required()
-                    ->maxLength(150)
+                    ->maxLength(100)
                     ->default('')
                     ->label('Libellé court'),
                 TextInput::make('libelle_long')
                     ->required()
-                    ->maxLength(1500)
+                    ->maxLength(150)
                     ->default('')
                     ->label('Libellé long'),
-                Select::make('id_mere')
-                    ->label('Unité de rattachement')
-                    ->relationship(name: 'parent', titleAttribute: 'libelle_long')
-                    ->required(),    
+                // Select::make('id_mere')
+                //     ->label('Unité de rattachement')
+                //     ->relationship(name: 'parent', titleAttribute: 'libelle_long')
+                //     ->required(),    
+                Select::make('lieu_unite_id')
+                ->relationship(name: 'lieuUnite', titleAttribute: 'libelle_long')
+                ->label("Lieu d'unité"),   
                 // Liaison entre Unite et Type Unite
                 Select::make('type_unite_id')
                     ->relationship(name: 'typeUnite', titleAttribute: 'libelle_long')
-                    ->label("type d'unité"),   
+                    ->label("Type d'unité"),   
                 // TextInput::make('ordre')
                 //     ->required()
                 //     ->numeric(),
-                Textarea::make('data')
-                    ->columnSpanFull(),
+                // Textarea::make('data')
+                //     ->columnSpanFull(),
             ]);
     }
 
@@ -69,10 +73,10 @@ class UniteResource extends Resource
                     ->label('ID')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('parent.libelle_court')
-                    ->label('Unité rattach.')
-                    ->sortable()
-                    ->searchable(),         
+                // TextColumn::make('parent.libelle_court')
+                //     ->label('Unité rattach.')
+                //     ->sortable()
+                //     ->searchable(),         
                 TextColumn::make('libelle_court')
                     ->searchable()
                     ->sortable()
@@ -88,7 +92,11 @@ class UniteResource extends Resource
                 TextColumn::make('typeUnite.libelle_court')
                     ->searchable()
                     ->label('Type unité')
-                    ->toggleable(isToggledHiddenByDefault: true),  
+                    //->toggleable(isToggledHiddenByDefault: true)
+                    ,
+                TextColumn::make('lieuUnite.libelle_court')
+                    ->searchable()
+                    ->label('Lieu') ,
                 // TextColumn::make('ordre')
                 //     ->numeric()
                 //     ->sortable(),
@@ -101,9 +109,12 @@ class UniteResource extends Resource
                 
             ])
             ->filters([
-                SelectFilter::make('id_mere')
-                    ->label('Unité rattach.')
-                    ->options(Unite::query()->orderBy('libelle_court','asc')->pluck('libelle_court', 'id')),
+                // SelectFilter::make('id_mere')
+                //     ->label('Unité rattach.')
+                //     ->options(Unite::query()->orderBy('libelle_court','asc')->pluck('libelle_court', 'id')),
+                SelectFilter::make('lieu_unite_id')
+                ->label('Lieu unité')
+                ->options(LieuUnite::query()->orderBy('libelle_court','asc')->pluck('libelle_court', 'id')),
                 SelectFilter::make('type_unite_id')
                     ->label('Type unité')
                     ->options(TypeUnite::query()->orderBy('libelle_court','asc')->pluck('libelle_court', 'id')),
