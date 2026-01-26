@@ -3,7 +3,7 @@
 namespace Modules\RH\Filament\RH\Resources;
 
 use Modules\RH\Filament\RH\Resources\UniteResource\Pages;
-use Modules\RH\Filament\RH\Resources\UniteResource\RelationManagers;
+use Modules\RH\Filament\RH\Resources\UniteResource\RelationManagers\UsersRelationManager;
 use Modules\RH\Models\Unite;
 use Modules\RH\Models\TypeUnite;
 use Modules\RH\Models\LieuUnite;
@@ -18,6 +18,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 
@@ -146,7 +147,7 @@ class UniteResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            UsersRelationManager::class
         ];
     }
 
