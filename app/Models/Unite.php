@@ -61,4 +61,14 @@ class Unite extends Model
         return $this->belongsTo(LieuUnite::class, "lieu_unite_id", "id");
     }
 
+	public function users()
+	{
+		return $this->belongsToMany(User::class, "rh_user_unite");
+	}
+
+	protected  static function newFactory()
+	{
+		return \Modules\RH\Database\Factories\UniteFactory::new();
+	}
+
 }
