@@ -19,9 +19,13 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $nom = $this->faker->text(5);
+        $prenom = $this->faker->text(5);
+
         return [
-            'nom' =>$this->faker->text(5),
-            'prenom' =>$this->faker->text(5),
+            'nom' => $nom,
+            'prenom' => $prenom,
+            'display_name' => $prenom . ' ' . $nom,
             'email' => $this->faker->unique()->safeEmail,
             'email_verified_at' => now(),
             'password' => bcrypt('password'),

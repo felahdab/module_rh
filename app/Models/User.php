@@ -40,7 +40,7 @@ class User extends BaseModel
 	 */
 	public function setUnite(?Unite $unite)
 	{
-		$this->unite_private()->sync($unite);
+		$this->unite_private()->sync($unite, detaching: true);
 	}
 
 	public function getUnite()

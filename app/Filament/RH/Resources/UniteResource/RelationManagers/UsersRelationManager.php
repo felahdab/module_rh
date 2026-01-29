@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UsersRelationManager extends RelationManager
 {
+    protected static ?string $title = 'Utilisateurs';
     protected static string $relationship = 'users';
 
     public function form(Form $form): Form
@@ -28,22 +29,29 @@ class UsersRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('display_name')
+            ->inverseRelationship('unite_private')
             ->columns([
-                Tables\Columns\TextColumn::make('display_name'),
+                Tables\Columns\TextColumn::make('nom')
+                    ->label("Nom"),
+                Tables\Columns\TextColumn::make('prenom')
+                    ->label("Prénom"),
+                Tables\Columns\TextColumn::make('email')
+                    ->label("E-mail"),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\AttachAction::make()
+                    ->preloadRecordSelect()
+                    ->multiple()
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DetachAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DetachBulkAction::make(),
                 ]),
             ]);
     }
