@@ -1,3 +1,13 @@
+## 0.1.2 (February 13, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.1.1 –> 0.1.2
+- Implements artifact #672604: permet d'associer un utilisateur à une unité du module RH.
+- Création d'un relation manager pour afficher la liste des utilisateurs affectés sous la page d'édition d'une unité.
+- Rajout des methodes dans User et Unite pour obtenir les utilisateurs affectes et l'unite d'affectation.
+- Creation migration pour la création de la table user_unite
+- Implements art #672983 : refonte du seeder unite ,  modification rh_unites, creation rh_lieu_unites faire un migrate
+- Ajustement des vérifications d'autorisation pour l'accessibilité des pages préférées, des liens d'accès rapide, de la recherche Annudef et de la gestion des types d'unités (TypeUnite).
+- Implements artifact #673196: créé une entrée pointant vers la liste des marins dans le menu d'accès direct, et dans la liste des pages préférées exposées par le module. Rajoute également la page de préférences utilisateur au panneau.
+
 ## 0.1.1 (January 14, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.1.0 –> 0.1.1
 - Prise en compte du grade présent dans les informations Annudef dans le formulaire de création du Marin.
