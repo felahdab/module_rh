@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Modules\RH\Models\Grade;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Grade>
+ * @extends Factory<\App\Models\Grade>
  */
 class GradeFactory extends Factory
 {

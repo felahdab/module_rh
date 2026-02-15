@@ -2,11 +2,17 @@
 
 namespace Modules\RH\Filament\RH\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Modules\RH\Filament\RH\Resources\MpeResource\Pages\ListMpes;
+use Modules\RH\Filament\RH\Resources\MpeResource\Pages\CreateMpe;
+use Modules\RH\Filament\RH\Resources\MpeResource\Pages\EditMpe;
 use Modules\RH\Filament\RH\Resources\MpeResource\Pages;
 use Modules\RH\Filament\RH\Resources\MpeResource\RelationManagers;
 use Modules\RH\Models\Mpe;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,19 +25,19 @@ class MpeResource extends Resource
 {
     protected static ?string $model = Mpe::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Marins';
+    protected static string | \UnitEnum | null $navigationGroup = 'Marins';
     protected static ?string $navigationLabel= 'MPE';
 
     protected static ?string $modelLabel= 'Liste MPE';
 
     protected static ?string $pluralModelLabel= 'Liste MPE';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 //
             ]);
     }
@@ -63,12 +69,12 @@ class MpeResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -83,9 +89,9 @@ class MpeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMpes::route('/'),
-            'create' => Pages\CreateMpe::route('/create'),
-            'edit' => Pages\EditMpe::route('/{record}/edit'),
+            'index' => ListMpes::route('/'),
+            'create' => CreateMpe::route('/create'),
+            'edit' => EditMpe::route('/{record}/edit'),
         ];
     }
 }

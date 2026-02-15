@@ -2,14 +2,14 @@
 
 namespace Modules\RH\Filament\RH\Pages;
 
+use Filament\Actions\Action;
+use Filament\Support\Enums\Width;
+use Filament\Schemas\Components\Wizard;
+use Filament\Actions\BulkAction;
 use App\Filament\PageTemplates\RechercheAnnuairePageTemplate;
-
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\BulkAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Wizard;
 use Filament\Forms;
 use Filament\Forms\Get;
 use Filament\Support\Enums;
@@ -35,7 +35,7 @@ use Modules\RH\Filament\RH\Pages\RechercheAnnuaireForms\RechercheAnnuaireCreateU
 
 class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
 {
-    protected static ?string $navigationGroup = 'Marins';
+    protected static string | \UnitEnum | null $navigationGroup = 'Marins';
     protected static ?string $navigationLabel= 'Recherche Annudef';
 
     public function getRowActions()
@@ -48,8 +48,8 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
                 ->icon('heroicon-o-plus')
                 ->label("Créé un utilisateur local et/ou une fiche de marin")
                 ->requiresConfirmation()
-                ->modalWidth(Enums\MaxWidth::SevenExtraLarge)
-                ->form([Wizard::make()->schema(RechercheAnnuaireCreateUserOrMarinForm::getSchema())])
+                ->modalWidth(Width::SevenExtraLarge)
+                ->schema([Wizard::make()->schema(RechercheAnnuaireCreateUserOrMarinForm::getSchema())])
                 ->fillForm(fn ($record): array => [
                     'nid' => $record->nid,
                     'grade_id' => AnnudefGradeService::getGradeFromAnnudefRank($record->gradelong) ?->id

@@ -19,8 +19,8 @@ class ConfirmMarinUuidJobTest extends TestCase
 {
 
 
-    
-    
+
+
     // NOTE 
     // J'ai du modifier Fichier Database dans ma version pour les tests
     // Modification aussi de .env.testing (ajout )
@@ -31,7 +31,7 @@ class ConfirmMarinUuidJobTest extends TestCase
 
      public function testConfirmMarinUuidJobIsDispatched()
      {
-        
+
         // Simuler file attente
         // Isolation test (ne sont pas relllement executes mais garde en memoire)
         Queue::fake();
@@ -49,24 +49,24 @@ class ConfirmMarinUuidJobTest extends TestCase
 
         // Supprimer marin Test
          $marin->delete();
-        
-        
-        
-        
-        
+
+
+
+
+
 
      }
-    
-    
+
+
     /**
      * Autre Idee pour confirmation
      */
-    
+
 
      /*
     public function test_the_application_returns_a_successful_response(): void
     {
-        
+
         // Creation Marin
         $marin = Marin::factory()->create();
 
@@ -83,17 +83,17 @@ class ConfirmMarinUuidJobTest extends TestCase
         Log::shouldReceive('info')
             ->once()
             ->with("UUID is already confirmed. End of job.");    
-        
+
         // Executer le job
         $job->handle();
-        
+
         // Check si job a bien été exécuté
         $this->assertTrue(true);
 
         // Supprimer marin Test
         $marin->delete();
-        
-        
+
+
 
     }
 

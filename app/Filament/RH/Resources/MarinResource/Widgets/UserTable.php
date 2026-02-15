@@ -2,8 +2,9 @@
 
 namespace Modules\RH\Filament\RH\Resources\MarinResource\Widgets;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\Action;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Model;
@@ -23,14 +24,14 @@ class UserTable extends BaseWidget
                 User::query()            
             )
             ->columns([
-                Tables\Columns\TextColumn::make('nom')
+                TextColumn::make('nom')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('prenom')
+                TextColumn::make('prenom')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->searchable(),
             ])
-            ->actions([
+            ->recordActions([
                 Action::make("associate")
                     ->label("Associer à cet utilisateur")
                     ->visible(function($record)

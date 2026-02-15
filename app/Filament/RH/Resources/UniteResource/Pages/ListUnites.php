@@ -2,6 +2,7 @@
 
 namespace Modules\RH\Filament\RH\Resources\UniteResource\Pages;
 
+use Filament\Actions\CreateAction;
 use Modules\RH\Filament\RH\Resources\UniteResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -14,7 +15,7 @@ class ListUnites extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

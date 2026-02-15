@@ -2,6 +2,9 @@
 
 namespace Modules\RH\Filament\RH\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Pages\Page;
 
 use App\Models\Setting;
@@ -9,15 +12,12 @@ use App\Models\Setting;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Fieldset;
 
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Forms\Form;
 use Filament\Actions\Action;
-use Filament\Forms\Get;
 
 use Modules\RH\Models\Unite;
 
@@ -29,9 +29,9 @@ class Configuration extends Page implements HasForms, HasActions
     protected static ?string $title = 'Configuration du module RH';
     protected static ?string $navigationLabel = 'Configuration';
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static string $view = 'rh::filament.rh.pages.configuration';
+    protected string $view = 'rh::filament.rh.pages.configuration';
 
     public ?array $data = [];
     
@@ -57,10 +57,10 @@ class Configuration extends Page implements HasForms, HasActions
             ->action(fn() => $this->save());
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('unite_par_defaut')
                     ->label("Unité locale")
                     ->helperText("Cette unité sera celle utilisée par défaut pour les données RH locales.")

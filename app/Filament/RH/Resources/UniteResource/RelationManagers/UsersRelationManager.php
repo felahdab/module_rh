@@ -2,8 +2,14 @@
 
 namespace Modules\RH\Filament\RH\Resources\UniteResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DetachBulkAction;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -15,11 +21,11 @@ class UsersRelationManager extends RelationManager
     protected static ?string $title = 'Utilisateurs';
     protected static string $relationship = 'users';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('display_name')
+        return $schema
+            ->components([
+                TextInput::make('display_name')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -31,27 +37,27 @@ class UsersRelationManager extends RelationManager
             ->recordTitleAttribute('display_name')
             ->inverseRelationship('unite_private')
             ->columns([
-                Tables\Columns\TextColumn::make('nom')
+                TextColumn::make('nom')
                     ->label("Nom"),
-                Tables\Columns\TextColumn::make('prenom')
+                TextColumn::make('prenom')
                     ->label("Prénom"),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->label("E-mail"),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
+                AttachAction::make()
                     ->preloadRecordSelect()
                     ->multiple()
             ])
-            ->actions([
-                Tables\Actions\DetachAction::make(),
+            ->recordActions([
+                DetachAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DetachBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DetachBulkAction::make(),
                 ]),
             ]);
     }

@@ -2,6 +2,8 @@
 
 namespace Modules\RH\Filament\RH\Resources\MarinResource\Pages;
 
+use Filament\Actions\DeleteAction;
+use Filament\Actions\Action;
 use Modules\RH\Filament\RH\Resources\MarinResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -17,8 +19,8 @@ class EditMarin extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
-            Actions\Action::make('createUser')
+            DeleteAction::make(),
+            Action::make('createUser')
                 ->label('Créer Utilisateur')
                 ->action(function(){
                     $record = $this->record;
@@ -48,12 +50,12 @@ class EditMarin extends EditRecord
         //     ->title('Marin modifié avec succès')
         //     ->success()
         //     ->send();
-        
+
         // Redirection en fonction Module
         // dd(request()->fullUrl());
         // if (request()->query('type')==='fcmcommun')
         // {
-           
+
         //     $this->redirectRoute('filament.ressources.fcm-commun/marins.index');
         // }
     }

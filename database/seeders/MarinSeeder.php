@@ -2,6 +2,7 @@
 
 namespace Modules\RH\Database\Seeders;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -26,7 +27,7 @@ class MarinSeeder extends Seeder
             
             // Creer un mentor
             Marin::create([
-                'uuid'      =>  (string) \Illuminate\Support\Str::uuid(),
+                'uuid'      =>  (string) Str::uuid(),
                 'nid'       => 'nid_mentor',
                 'nom'       => 'MENTOR',
                 'prenom'    => 'Prenom',

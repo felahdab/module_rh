@@ -2,11 +2,18 @@
 
 namespace Modules\RH\Filament\RH\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Modules\RH\Filament\RH\Resources\BrevetResource\Pages\ListBrevets;
+use Modules\RH\Filament\RH\Resources\BrevetResource\Pages\CreateBrevet;
+use Modules\RH\Filament\RH\Resources\BrevetResource\Pages\EditBrevet;
 use Modules\RH\Filament\RH\Resources\BrevetResource\Pages;
 use Modules\RH\Filament\RH\Resources\BrevetResource\RelationManagers;
 use Modules\RH\Models\Brevet;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -20,25 +27,25 @@ class BrevetResource extends Resource
 {
     protected static ?string $model = Brevet::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Gestion';
+    protected static string | \UnitEnum | null $navigationGroup = 'Gestion';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('libelle_court')
+        return $schema
+            ->components([
+                TextInput::make('libelle_court')
                     ->required()
                     ->maxLength(10)
                     ->default('')
                     ->label('Libellé court'),
-                Forms\Components\TextInput::make('libelle_long')
+                TextInput::make('libelle_long')
                     ->required()
                     ->maxLength(100)
                     ->default('')
                     ->label('Libellé long'),
-                Forms\Components\TextInput::make('ordre')
+                TextInput::make('ordre')
                     ->required()
                     ->numeric()
                     ->label('Ordre'),
@@ -51,30 +58,30 @@ class BrevetResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label('ID')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('libelle_court')
+                TextColumn::make('libelle_court')
                     ->label('Libellé court')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('libelle_long')
+                TextColumn::make('libelle_long')
                     ->label('Libellé long')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('ordre')
+                TextColumn::make('ordre')
                     ->numeric()
                     ->sortable()
                     ->label('Ordre'),
-                Tables\Columns\TextColumn::make('marins_count')
+                TextColumn::make('marins_count')
                     ->label('Nb Marins')
                     ->counts('marins')
                     ->sortable()
                     ->badge(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -83,23 +90,23 @@ class BrevetResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                EditAction::make()
                     ->iconButton()
                     ->icon('heroicon-m-pencil-square')
                     ->extraAttributes([
                     'title' => 'Modifier',
                     'class' => 'btn-modif',
                     ]),
-                
-                Tables\Actions\DeleteAction::make()
+
+                DeleteAction::make()
                     ->iconButton()
                     ->icon('heroicon-m-trash')
                     ->extraAttributes([
                         'title' => 'Supprimer',
                         'class' => 'btn-suppr',
                         ])
-                    ->before(function (Tables\Actions\DeleteAction $action, Brevet $record) {
+                    ->before(function (DeleteAction $action, Brevet $record) {
                         $ordre=$record->ordre;
                         $list_brevets=Brevet::all();
                         foreach($list_brevets as $brevet){
@@ -141,9 +148,9 @@ class BrevetResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBrevets::route('/'),
-            'create' => Pages\CreateBrevet::route('/create'),
-            'edit' => Pages\EditBrevet::route('/{record}/edit'),
+            'index' => ListBrevets::route('/'),
+            'create' => CreateBrevet::route('/create'),
+            'edit' => EditBrevet::route('/{record}/edit'),
         ];
     }
 
@@ -152,7 +159,7 @@ class BrevetResource extends Resource
     //     // return [
     //         dd('toto');
     //     Actions\DeleteAction::make()
-        
+
     //     ->before(function (DeleteAction $action) {
     //         
     //             dd($action);

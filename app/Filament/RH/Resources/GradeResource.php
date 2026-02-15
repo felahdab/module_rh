@@ -2,11 +2,18 @@
 
 namespace Modules\RH\Filament\RH\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Modules\RH\Filament\RH\Resources\GradeResource\Pages\ListGrades;
+use Modules\RH\Filament\RH\Resources\GradeResource\Pages\CreateGrade;
+use Modules\RH\Filament\RH\Resources\GradeResource\Pages\EditGrade;
 use Modules\RH\Filament\RH\Resources\GradeResource\Pages;
 use Modules\RH\Filament\RH\Resources\GradeResource\RelationManagers;
 use Modules\RH\Models\Grade;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,26 +24,26 @@ class GradeResource extends Resource
 {
     protected static ?string $model = Grade::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Gestion';
+    protected static string | \UnitEnum | null $navigationGroup = 'Gestion';
     protected static ?string $navigationLabel = 'Grades';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('libelle_court')
+        return $schema
+            ->components([
+                TextInput::make('libelle_court')
                     ->required()
                     ->maxLength(10)
                     ->default('')
                     ->label('Libellé court'),
-                Forms\Components\TextInput::make('libelle_long')
+                TextInput::make('libelle_long')
                     ->required()
                     ->maxLength(100)
                     ->default('')
                     ->label('Libellé long'),
-                Forms\Components\TextInput::make('ordre')
+                TextInput::make('ordre')
                     ->required()
                     ->numeric()
                     ->label('Ordre'),
@@ -50,25 +57,25 @@ class GradeResource extends Resource
         return $table
             ->defaultSort('ordre','asc')
             ->columns([
-                Tables\Columns\TextColumn::make('libelle_court')
+                TextColumn::make('libelle_court')
                     ->searchable()
                     ->label('Libellé court'),
-                Tables\Columns\TextColumn::make('libelle_long')
+                TextColumn::make('libelle_long')
                     ->searchable()
                     ->label('Libellé long'),
-                Tables\Columns\TextColumn::make('ordre')
+                TextColumn::make('ordre')
                     ->label('Ordre')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('marins_count')
+                TextColumn::make('marins_count')
                     ->label('Nb marins')
                     ->counts('marins')
                     ->badge(),        
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -76,22 +83,22 @@ class GradeResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                EditAction::make()
                 ->iconButton()
                 ->icon('heroicon-m-pencil-square')
                 ->extraAttributes([
                     'title' => 'Modifier',
                     'class' => 'btn-modif',
                     ]),
-                Tables\Actions\DeleteAction::make()
+                DeleteAction::make()
                     ->iconButton()
                     ->icon('heroicon-m-trash')
                     ->extraAttributes([
                         'title' => 'Supprimer',
                         'class' => 'btn-suppr',
                         ])
-                    ->before(function (Tables\Actions\DeleteAction $action, Grade $record) {
+                    ->before(function (DeleteAction $action, Grade $record) {
                         $ordre=$record->ordre;
                         $list_grades=Grade::all();
                         foreach($list_grades as $grade){
@@ -120,9 +127,9 @@ class GradeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGrades::route('/'),
-            'create' => Pages\CreateGrade::route('/create'),
-            'edit' => Pages\EditGrade::route('/{record}/edit'),
+            'index' => ListGrades::route('/'),
+            'create' => CreateGrade::route('/create'),
+            'edit' => EditGrade::route('/{record}/edit'),
         ];
     }
 }

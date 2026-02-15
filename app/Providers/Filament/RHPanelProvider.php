@@ -56,7 +56,7 @@ class RHPanelProvider extends PanelProvider
             ->discoverResources(in: module_path($this->module, 'app/Filament/RH/Resources'), for: "$moduleNamespace\\Filament\\RH\\Resources")
             ->discoverPages(in: module_path($this->module, 'app/Filament/RH/Pages'), for: "$moduleNamespace\\Filament\\RH\\Pages")
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->discoverWidgets(in: module_path($this->module, 'app/Filament/RH/Widgets'), for: "$moduleNamespace\\Filament\\RH\\Widgets")
             ->widgets([

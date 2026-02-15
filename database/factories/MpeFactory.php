@@ -2,6 +2,7 @@
 
 namespace Modules\RH\Database\Factories;
 
+use Modules\RH\Models\Mpe;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 
@@ -9,11 +10,11 @@ use Modules\RH\Models\Marin;
 use Modules\RH\Models\Unite;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Diplome>
+ * @extends Factory<\App\Models\Diplome>
  */
 class MpeFactory extends Factory
 {
-    protected $model = \Modules\RH\Models\Mpe::class;
+    protected $model = Mpe::class;
 
     /**
      * Define the model's default state.

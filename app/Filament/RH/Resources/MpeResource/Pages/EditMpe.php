@@ -2,6 +2,7 @@
 
 namespace Modules\RH\Filament\RH\Resources\MpeResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use Modules\RH\Filament\RH\Resources\MpeResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -13,7 +14,7 @@ class EditMpe extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

@@ -2,11 +2,16 @@
 
 namespace Modules\RH\Filament\RH\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Modules\RH\Filament\RH\Resources\TypeUniteResource\Pages\ListTypeUnites;
+use Modules\RH\Filament\RH\Resources\TypeUniteResource\Pages\CreateTypeUnite;
+use Modules\RH\Filament\RH\Resources\TypeUniteResource\Pages\EditTypeUnite;
 use Modules\RH\Filament\RH\Resources\TypeUniteResource\Pages;
 use Modules\RH\Filament\RH\Resources\TypeUniteResource\RelationManagers;
 use Modules\RH\Models\TypeUnite;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -21,15 +26,15 @@ class TypeUniteResource extends Resource
 {
     protected static ?string $model = TypeUnite::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Gestion';
+    protected static string | \UnitEnum | null $navigationGroup = 'Gestion';
     protected static ?string $navigationLabel = "Types d'unités";
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('libelle_court')
                     ->required()
                     ->maxLength(10)
@@ -77,15 +82,15 @@ class TypeUniteResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                EditAction::make()
                     ->iconButton()
                     ->icon('heroicon-m-pencil-square')
                     ->extraAttributes([
                         'title' => 'Modifier',
                         'class' => 'btn-modif',
                         ]),
-                Tables\Actions\DeleteAction::make()
+                DeleteAction::make()
                     ->iconButton()
                     ->icon('heroicon-m-trash')
                     ->extraAttributes([
@@ -111,9 +116,9 @@ class TypeUniteResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTypeUnites::route('/'),
-            'create' => Pages\CreateTypeUnite::route('/create'),
-            'edit' => Pages\EditTypeUnite::route('/{record}/edit'),
+            'index' => ListTypeUnites::route('/'),
+            'create' => CreateTypeUnite::route('/create'),
+            'edit' => EditTypeUnite::route('/{record}/edit'),
         ];
     }
 }
