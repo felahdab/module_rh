@@ -18,8 +18,6 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-
-use Filament\FontProviders\SpatieGoogleFontProvider;
 use App\Filament\AvatarProviders\AnnudefAvatarProvider;
 use App\Providers\Filament\Traits\UsesSkeletorPrefixAndMultitenancyTrait;
 
@@ -49,7 +47,6 @@ class RHPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Cyan,
             ])
-            ->font('Inter', provider: SpatieGoogleFontProvider::class)
             ->defaultAvatarProvider(AnnudefAvatarProvider::class)
             ->brandName("Ressources humaines")
             ->profile(UserPreferences::class)
