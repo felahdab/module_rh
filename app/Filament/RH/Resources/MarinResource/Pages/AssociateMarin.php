@@ -2,12 +2,13 @@
 
 namespace Modules\RH\Filament\RH\Resources\MarinResource\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
 use Modules\RH\Filament\RH\Resources\MarinResource;
 use Modules\RH\Filament\RH\Resources\MarinResource\Widgets\UserTable;
 
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Forms\Form;
 use Filament\Forms;
 
 
@@ -17,19 +18,19 @@ class AssociateMarin extends ViewRecord
 
     protected static ?string $title = "Associer un marin à un utilisateur";
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\TextInput::make('nom')
+        return $schema->components([
+            TextInput::make('nom')
                 ->required()
                 ->maxLength(255),
-            Forms\Components\TextInput::make('prenom')
+            TextInput::make('prenom')
                 ->required()
                 ->maxLength(255),
-            Forms\Components\TextInput::make('matricule')
+            TextInput::make('matricule')
                 ->maxLength(20)
                 ->default(''),
-            Forms\Components\TextInput::make('nid')
+            TextInput::make('nid')
                 ->maxLength(15)
                 ->default(''),
         ]);

@@ -2,6 +2,7 @@
 
 namespace Modules\RH\Providers;
 
+use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -103,7 +104,7 @@ class RHServiceProvider extends ServiceProvider
             PreferedPageItem::make()
                 ->name('RH: Gestion des marins')
                 ->visible(fn() => auth()->check() && auth()->user()->can('rh::marins.index'))
-                ->routeName(fn() => ListMarins::getRouteName(panel: 'RH')),
+                ->routeName(fn() => ListMarins::getRouteName(Filament::getPanel('RH'))),
             ]
         );
     }

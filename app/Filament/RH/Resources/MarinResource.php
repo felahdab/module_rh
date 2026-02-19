@@ -2,11 +2,19 @@
 
 namespace Modules\RH\Filament\RH\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Actions\Action;
+use Modules\RH\Filament\RH\Resources\MarinResource\Pages\AssociateMarin;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Modules\RH\Filament\RH\Resources\MarinResource\Pages\ListMarins;
+use Modules\RH\Filament\RH\Resources\MarinResource\Pages\CreateMarin;
+use Modules\RH\Filament\RH\Resources\MarinResource\Pages\EditMarin;
 use Modules\RH\Filament\RH\Resources\MarinResource\Pages;
 use Modules\RH\Filament\RH\Resources\MarinResource\RelationManagers;
 use Modules\RH\Models\Marin;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -30,11 +38,11 @@ class MarinResource extends Resource
 {
     protected static ?string $model = Marin::class;
 
-    protected static ?string $navigationGroup = 'Marins';
+    protected static string | \UnitEnum | null $navigationGroup = 'Marins';
     protected static ?string $navigationLabel= 'Marins';
 
 
-    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-academic-cap';
 
     // Pour modifier slug (doc dans ressources)
     //protected static ?string $slug = 'toto';
@@ -46,10 +54,10 @@ class MarinResource extends Resource
 
 
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('nom')
                     ->required()
                     ->autofocus()
@@ -158,15 +166,15 @@ class MarinResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                EditAction::make()
                 ->iconButton()
                 ->icon('heroicon-m-pencil-square')
                 ->extraAttributes([
                     'title' => 'Modifier',
                     'class' => 'btn-modif',
                     ]),
-                Tables\Actions\Action::make('associer-a-un-utilisateur')
+                Action::make('associer-a-un-utilisateur')
                 ->iconButton()
                 ->icon('heroicon-m-users')
                 ->extraAttributes([
@@ -176,10 +184,10 @@ class MarinResource extends Resource
                 ->url(
                     function($record)
                     {
-                        return Pages\AssociateMarin::getUrl(["record" => $record]);
+                        return AssociateMarin::getUrl(["record" => $record]);
                     }
                 ),
-                Tables\Actions\Action::make('verifier-avec-serveur-distant')
+                Action::make('verifier-avec-serveur-distant')
                     ->iconButton()
                     ->icon('heroicon-m-server-stack')
                     ->extraAttributes([
@@ -192,7 +200,7 @@ class MarinResource extends Resource
                     }),
                
                 // Bouton pour creer un user 
-                Tables\Actions\Action::make('createUser')
+                Action::make('createUser')
                     ->label('Créer Utilisateur')
                     ->iconButton()
                     ->icon('heroicon-m-user-plus')
@@ -221,9 +229,9 @@ class MarinResource extends Resource
                     
                 // Fin Bouton 
                 ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -238,10 +246,10 @@ class MarinResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMarins::route('/'),
-            'create' => Pages\CreateMarin::route('/create'),
-            'edit' => Pages\EditMarin::route('/{record}/edit'),
-            'associate' => Pages\AssociateMarin::route('/{record}/associate'),
+            'index' => ListMarins::route('/'),
+            'create' => CreateMarin::route('/create'),
+            'edit' => EditMarin::route('/{record}/edit'),
+            'associate' => AssociateMarin::route('/{record}/associate'),
         ];
     }
 }

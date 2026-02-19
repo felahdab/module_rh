@@ -8,7 +8,7 @@ use Spatie\LaravelData\Data;
 class NewMarinDescriptionData extends Data
 {
     public function __construct(
-        public string $nom,
+        public ?string $nom,
         public string $prenom,
         public ?string $matricule,
         public ?string $nid,
@@ -25,8 +25,8 @@ class NewMarinDescriptionData extends Data
    ) {}
 
    public static function make(
-      string $nom = null,
-      string $prenom = null,
+      ?string $nom = null,
+      ?string $prenom = null,
       ?string $matricule = null,
       ?string $nid = null,
       ?string $date_embarq = null,

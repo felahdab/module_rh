@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use Modules\RH\Models\Brevet;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Diplome>
+ * @extends Factory<\App\Models\Diplome>
  */
 class BrevetFactory extends Factory
 {

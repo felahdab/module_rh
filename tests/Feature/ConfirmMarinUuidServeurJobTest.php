@@ -145,13 +145,13 @@ class ConfirmMarinUuidServeurJobTest extends TestCase
 
         // Injecter le mock dans le conteneur de services
         $this->app->instance(Setting::class, $mockSetting);
-        
+
 
         // Methode  2 avec Config (ca marche)
         // Config::set('rh.use_remote_rh_server', false);
         */
 
-        
+
 
         // Creer Marin
         $marin = Marin::factory()->create([
@@ -231,7 +231,7 @@ class ConfirmMarinUuidServeurJobTest extends TestCase
        ]);
 
 
-        
+
         // Simulation du Job
         $job = new ConfirmMarinUuidJob($marin->uuid);
         //dd($job); 
@@ -263,14 +263,14 @@ class ConfirmMarinUuidServeurJobTest extends TestCase
         //    'prenom'=> 'Remote Prenom'
         // ]);
 
-       
 
-       
+
+
 
 
         Log::shouldReceive('warning')->once()->with('Handling marin uuid retreival :' . $marin->uuid . ' ' . tenant()?->id);
         Log::shouldReceive('info')->once()->with("Asking remote RH instance if nid is already known.");
-        
+
         // Le dernier Log ne fonctionne pas  doute sur $request = new RetreiveMarinByNID($marin->nid);
         //Log::shouldReceive('info')->once()->with("The NID is known. Updating local entry A.");
 
@@ -304,7 +304,7 @@ class ConfirmMarinUuidServeurJobTest extends TestCase
                 'nid' => 'NID12345',
                 'data' => ['status' => 'pending'],
             ]);
-    
+
             Setting::factory()->create([
                 'key' => 'rh',
                 'value' => json_encode([
@@ -313,24 +313,24 @@ class ConfirmMarinUuidServeurJobTest extends TestCase
                     'token_for_remote_rh_instance' => 'fake-token',
                 ]),
             ]);
-    
+
             $serverMock = Mockery::mock(CentralRHServerConnector::class);
             $serverMock->shouldReceive('send')->with(Mockery::type(RetreiveMarinByNID::class))->once()->andReturnSelf();
             $serverMock->shouldReceive('successful')->once()->andReturn(true);
             $serverMock->shouldReceive('json')->once()->andReturn([]);
-    
+
             // Mock création du marin
             $serverMock->shouldReceive('send')->with(Mockery::type(CreateMarin::class))->once()->andReturnSelf();
             $serverMock->shouldReceive('throw')->once();
-    
+
             $this->app->instance(CentralRHServerConnector::class, $serverMock);
-    
+
             Log::shouldReceive('info')->once()->with("The NID is unknown. We will create it.");
-    
+
             // Act
             (new ConfirmMarinUuidJob($marin->uuid))->handle();
         }
-    
+
          #[Test]
         public function it_fails_if_multiple_marins_are_returned()
         {
@@ -340,7 +340,7 @@ class ConfirmMarinUuidServeurJobTest extends TestCase
                 'nid' => 'NID12345',
                 'data' => ['status' => 'pending'],
             ]);
-    
+
             Setting::factory()->create([
                 'key' => 'rh',
                 'value' => json_encode([
@@ -349,7 +349,7 @@ class ConfirmMarinUuidServeurJobTest extends TestCase
                     'token_for_remote_rh_instance' => 'fake-token',
                 ]),
             ]);
-    
+
             $serverMock = Mockery::mock(CentralRHServerConnector::class);
             $serverMock->shouldReceive('send')->once()->andReturnSelf();
             $serverMock->shouldReceive('successful')->once()->andReturn(true);
@@ -357,11 +357,11 @@ class ConfirmMarinUuidServeurJobTest extends TestCase
                 ['uuid' => 'uuid1'],
                 ['uuid' => 'uuid2'],
             ]);
-    
+
             $this->app->instance(CentralRHServerConnector::class, $serverMock);
-    
+
             Log::shouldReceive('error')->once();
-    
+
             // Act & Assert
             $this->expectException(\Exception::class);
             (new ConfirmMarinUuidJob($marin->uuid))->handle();

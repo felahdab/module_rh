@@ -1,12 +1,13 @@
 <?php
 
+use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use Modules\RH\Models\User;
 use Modules\RH\Models\Unite;
  
 uses(RefreshDatabase::class);
-uses(Tests\TestCase::class);
+uses(TestCase::class);
 
 beforeEach(function () {
     $this->user=User::factory()->create();

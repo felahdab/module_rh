@@ -2,6 +2,7 @@
 
 namespace Modules\RH\Models;
 
+use Modules\RH\Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,7 +17,7 @@ class User extends BaseModel
 
 	protected  static function newFactory()
 	{
-		return \Modules\RH\Database\Factories\UserFactory::new();
+		return UserFactory::new();
 	}
 
 	public function marin()

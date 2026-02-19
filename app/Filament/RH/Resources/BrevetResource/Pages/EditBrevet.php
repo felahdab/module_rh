@@ -2,6 +2,7 @@
 
 namespace Modules\RH\Filament\RH\Resources\BrevetResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use Modules\RH\Filament\RH\Resources\BrevetResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -16,7 +17,7 @@ class EditBrevet extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 

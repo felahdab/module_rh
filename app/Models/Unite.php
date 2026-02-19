@@ -2,6 +2,7 @@
 
 namespace Modules\RH\Models;
 
+use Modules\RH\Database\Factories\UniteFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -68,7 +69,7 @@ class Unite extends Model
 
 	protected  static function newFactory()
 	{
-		return \Modules\RH\Database\Factories\UniteFactory::new();
+		return UniteFactory::new();
 	}
 
 }

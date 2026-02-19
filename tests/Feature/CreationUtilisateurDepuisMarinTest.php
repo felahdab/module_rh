@@ -23,7 +23,7 @@ class CreationUtilisateurDepuisMarinTest extends TestCase
 
     /**
      *  Pour inteliphisense qui me souligne en rouge adminUser
-     * @var \Modules\RH\Models\User
+     * @var User
      */
     protected $adminUser;
 
@@ -36,14 +36,14 @@ class CreationUtilisateurDepuisMarinTest extends TestCase
         // if(!Permission::where('name','users.store')->exists()) {
         //    Permission::create(['name' => 'users.store', 'guard_name' => 'web']); 
         // }
-        
+
         // if(!Role::where('name','admin')->exists()) {
         // $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'web']);
         // $adminRole->givePermissionTo('users.store');
         // }else{
         //     $adminRole= Role::where('name','admin')->first();
         // }
-       
+
         // Créer un utilisateur avec le rôle admin
         $this->adminUser = User::factory()->create(["admin" => 1]); 
         //$this->adminUser->assignRole($adminRole);  

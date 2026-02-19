@@ -18,8 +18,6 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-
-use Filament\FontProviders\SpatieGoogleFontProvider;
 use App\Filament\AvatarProviders\AnnudefAvatarProvider;
 use App\Providers\Filament\Traits\UsesSkeletorPrefixAndMultitenancyTrait;
 
@@ -49,14 +47,13 @@ class RHPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Cyan,
             ])
-            ->font('Inter', provider: SpatieGoogleFontProvider::class)
             ->defaultAvatarProvider(AnnudefAvatarProvider::class)
             ->brandName("Ressources humaines")
             ->profile(UserPreferences::class)
             ->discoverResources(in: module_path($this->module, 'app/Filament/RH/Resources'), for: "$moduleNamespace\\Filament\\RH\\Resources")
             ->discoverPages(in: module_path($this->module, 'app/Filament/RH/Pages'), for: "$moduleNamespace\\Filament\\RH\\Pages")
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->discoverWidgets(in: module_path($this->module, 'app/Filament/RH/Widgets'), for: "$moduleNamespace\\Filament\\RH\\Widgets")
             ->widgets([

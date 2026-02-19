@@ -2,6 +2,7 @@
 
 namespace Modules\RH\Filament\RH\Resources\SpecialiteResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use Modules\RH\Filament\RH\Resources\SpecialiteResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -14,7 +15,7 @@ class EditSpecialite extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

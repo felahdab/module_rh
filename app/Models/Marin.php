@@ -172,14 +172,14 @@ class Marin extends Model
 
     /**
      *  Trouver un marin par NID ou creer un nouveau si il existe pas
-     * 
+     *
      *  Function qui cherche un Marin par NID pour les TESTS car champ UNIQUE
      *  Si il trouve, il reprend ce marin
      *  SI il trouve pas, il le cree
-     * 
+     *
      * @param string $nid Le NID pour trouver Marin
      * @param array $data les champ pour specifier la creation
-     * @return \Modules\RH\Models\Marin Cherche ou creer dans RH_Marin
+     * @return Marin Cherche ou creer dans RH_Marin
      */
     public static function findOrCreateByNid(string $nid, array $data  ){
         $attributes = ['nid' => $nid ];
@@ -202,10 +202,10 @@ class Marin extends Model
 
     /**
      *  Creer un User
-     * 
+     *
      *  Function qui cree un user similaire a RH_marins
-     * 
-     * @return \Modules\RH\Models\Marin Creation User de Marin
+     *
+     * @return Marin Creation User de Marin
      */
     public  function createUser()
     {

@@ -2,6 +2,7 @@
 
 namespace Modules\RH\Database\Factories;
 
+use Modules\RH\Models\Marin;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Modules\RH\Models\Grade;
 use Modules\RH\Models\Brevet;
@@ -9,11 +10,11 @@ use Modules\RH\Models\Specialite;
 use Modules\RH\Models\Unite;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Diplome>
+ * @extends Factory<\App\Models\Diplome>
  */
 class MarinFactory extends Factory
 {
-    protected $model = \Modules\RH\Models\Marin::class;
+    protected $model = Marin::class;
 
     /**
      * Define the model's default state.
@@ -22,12 +23,13 @@ class MarinFactory extends Factory
      */
     public function definition()
     {
-        $nom = $this->faker->text(5);
-        $prenom = $this->faker->text(5);
+        $nom = $this->faker->lastName();
+        $prenom = $this->faker->firstName();
+        $email = $this->faker->email();
         return [
             'nom'           =>  $nom,
             'prenom'        =>  $prenom,
-            'email'         =>  $prenom.'.'.$nom.'@intradef.gouv.fr',
+            'email'         =>  $email,
             // 'grade_id'      =>  Grade::factory(),
             'grade_id'      =>  Grade::inRandomOrder()->first()?->id,
             'specialite_id' =>  Specialite::inRandomOrder()->first()?->id,

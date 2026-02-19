@@ -2,13 +2,18 @@
 
 namespace Modules\RH\Filament\RH\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Modules\RH\Filament\RH\Resources\UniteResource\Pages\ListUnites;
+use Modules\RH\Filament\RH\Resources\UniteResource\Pages\CreateUnite;
+use Modules\RH\Filament\RH\Resources\UniteResource\Pages\EditUnite;
 use Modules\RH\Filament\RH\Resources\UniteResource\Pages;
 use Modules\RH\Filament\RH\Resources\UniteResource\RelationManagers\UsersRelationManager;
 use Modules\RH\Models\Unite;
 use Modules\RH\Models\TypeUnite;
 use Modules\RH\Models\LieuUnite;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -27,15 +32,15 @@ class UniteResource extends Resource
 {
     protected static ?string $model = Unite::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Gestion';
+    protected static string | \UnitEnum | null $navigationGroup = 'Gestion';
     protected static ?string $navigationLabel = 'Unités';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('libelle_court')
                     ->required()
                     ->maxLength(100)
@@ -120,15 +125,15 @@ class UniteResource extends Resource
                     ->label('Type unité')
                     ->options(TypeUnite::query()->orderBy('libelle_court','asc')->pluck('libelle_court', 'id')),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                EditAction::make()
                     ->iconButton()
                     ->icon('heroicon-m-pencil-square')
                     ->extraAttributes([
                         'title' => 'Modifier',
                         'class' => 'btn-modif',
                         ]),
-                Tables\Actions\DeleteAction::make()
+                DeleteAction::make()
                     ->iconButton()
                     ->icon('heroicon-m-trash')
                     ->extraAttributes([
@@ -154,9 +159,9 @@ class UniteResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUnites::route('/'),
-            'create' => Pages\CreateUnite::route('/create'),
-            'edit' => Pages\EditUnite::route('/{record}/edit'),
+            'index' => ListUnites::route('/'),
+            'create' => CreateUnite::route('/create'),
+            'edit' => EditUnite::route('/{record}/edit'),
         ];
     }
 }

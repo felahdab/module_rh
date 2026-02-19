@@ -2,16 +2,17 @@
 
 namespace Modules\RH\Database\Factories;
 
+use Modules\RH\Models\Specialite;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Specialite>
+ * @extends Factory<\App\Models\Specialite>
  */
 class SpecialiteFactory extends Factory
 {
-    protected $model = \Modules\RH\Models\Specialite::class;
+    protected $model = Specialite::class;
     /**
      * Define the model's default state.
      *
