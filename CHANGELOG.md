@@ -1,3 +1,8 @@
+## 0.2.0 (February 19, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.1.2 –> 0.2.0
+- Ajustements pour supporter Filament V4 (donc Skeletor v4.0.0 +)
+- Retrait de la dépendance aux police Google.
+
 ## 0.1.2 (February 13, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.1.1 –> 0.1.2
 - Implements artifact #672604: permet d'associer un utilisateur à une unité du module RH.
