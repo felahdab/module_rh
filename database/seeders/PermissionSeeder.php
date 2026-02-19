@@ -18,6 +18,10 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        Permission::firstOrCreate(["name" => "rh::change_module_configurartion", "guard_name" => "web"]);
+        Permission::firstOrCreate(["name" => "rh::change_module_configuration", "guard_name" => "web"]);
+        Permission::firstOrCreate(["name" => "rh::voir_tous_les_marins", "guard_name" => "web"]);
+        Permission::firstOrCreate(["name" => "rh::attribuer_une_unite_a_un_utilisateur", "guard_name" => "web"]);
+        Permission::firstOrCreate(["name" => "rh::attribuer_une_unite_a_un_marin", "guard_name" => "web"]);
+        Permission::firstOrCreate(["name" => "rh::associer_un_marin_et_un_utilisateur", "guard_name" => "web"]);
     }
 }

@@ -30,6 +30,7 @@ use Modules\RH\Models\Brevet;
 use Modules\RH\Models\Unite;
 
 use Modules\RH\Services\AnnudefGradeService;
+use Modules\RH\Services\AnnudefUniteService;
 
 use Modules\RH\Filament\RH\Pages\RechercheAnnuaireForms\RechercheAnnuaireCreateUserOrMarinForm;
 
@@ -52,26 +53,10 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
                 ->schema([Wizard::make()->schema(RechercheAnnuaireCreateUserOrMarinForm::getSchema())])
                 ->fillForm(fn ($record): array => [
                     'nid' => $record->nid,
-                    'grade_id' => AnnudefGradeService::getGradeFromAnnudefRank($record->gradelong) ?->id
+                    'grade_id' => AnnudefGradeService::getGradeFromAnnudefRank($record->gradelong)?->id,
+                    'unite_id' => AnnudefUniteService::getUniteFromAnnudefBranch($record->unite)?->id,
                 ])
                 ->action(function ($record, $data){
-
-                   // dd($record);
-                    //log::info($record);
-                    // array:11 [▼ // vendor/spatie/laravel-ignition/src/helpers.php:14
-                    //   "marin" => true
-                    //   "matricule" => "123"
-                    //   "nid" => "321"
-                    //   "date_embarq" => null
-                    //   "date_debarq" => null
-                    //   "grade_id" => "9"
-                    //   "specialite_id" => "8"
-                    //   "brevet_id" => "3"
-                    //   "unite_id" => "8"
-                    //   "user" => true
-                    //   "roles" => array:1 [▶]
-                    // ]
-                    
                     if (Arr::get($data, 'user'))
                     {
                         UnUtilisateurLocalDoitEtreCreeEvent::dispatch($record->toArray(), $data['roles']);
@@ -97,7 +82,7 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
         return [
             BulkAction::make('create-local-user')
                 ->visible(function(){
-                   // return auth()->check() && auth()->user()->can('users.store');
+                    return auth()->check() && auth()->user()->can('create', User::class);
                 })
                 ->icon('heroicon-o-plus')
                 ->label("Créé l'utilisateur local")

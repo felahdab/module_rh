@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\User as BaseModel;
 
 use Modules\RH\Models\Marin;
+use Modules\RH\Models\Scopes\MarinFiltreParUniteScope;
+
 
 class User extends BaseModel
 {
@@ -42,11 +44,30 @@ class User extends BaseModel
 	public function setUnite(?Unite $unite)
 	{
 		$this->unite_private()->sync($unite, detaching: true);
+
+		$marin = Marin::fromUser($this);
+		if ($marin != null)
+		{
+			/** L'utilisateur a une fiche de Marin associée. On met à jour la fiche de Marin en même temps */
+			$marin->unite_id = $unite?->id;
+			$marin->save();
+		}
 	}
 
-	public function getUnite()
+	public function getUnite(bool $explore_marin = false)
 	{
-		return $this->unite;
+		$unite = $this->unite_private()->first();
+		if ( $unite != null ) return $unite;
+
+		if ($explore_marin){
+			/** Si explore_marin est true: on essaye de trouver la réponse dans la fiche de Marin associée 
+			 * s'il y en a une.
+			 */
+			$marin = Marin::fromUser($this);
+			return $marin?->getUnite(explore_user: false);
+		}
+		
+		return null;
 	}
 
 	public function getUniteAttribute()

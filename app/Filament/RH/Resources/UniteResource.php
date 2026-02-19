@@ -10,6 +10,7 @@ use Modules\RH\Filament\RH\Resources\UniteResource\Pages\CreateUnite;
 use Modules\RH\Filament\RH\Resources\UniteResource\Pages\EditUnite;
 use Modules\RH\Filament\RH\Resources\UniteResource\Pages;
 use Modules\RH\Filament\RH\Resources\UniteResource\RelationManagers\UsersRelationManager;
+use Modules\RH\Filament\RH\Resources\UniteResource\RelationManagers\MarinsRelationManager;
 use Modules\RH\Models\Unite;
 use Modules\RH\Models\TypeUnite;
 use Modules\RH\Models\LieuUnite;
@@ -94,7 +95,11 @@ class UniteResource extends Resource
                 TextColumn::make('marins_count')
                     ->label('Nb Marins')
                     ->counts('marins')
-                    ->badge(),        
+                    ->badge(),   
+                TextColumn::make('users_count')
+                    ->label('Nb utilisateurs')
+                    ->counts('users')
+                    ->badge(),      
                 TextColumn::make('typeUnite.libelle_court')
                     ->searchable()
                     ->label('Type unité')
@@ -152,7 +157,8 @@ class UniteResource extends Resource
     public static function getRelations(): array
     {
         return [
-            UsersRelationManager::class
+            UsersRelationManager::class,
+            MarinsRelationManager::class
         ];
     }
 

@@ -18,6 +18,7 @@ use Modules\RH\Database\Factories\MarinFactory;
 
 use App\Service\RandomPasswordGeneratorService;
 use Modules\RH\Events\UnMarinDoitEtreCreeEvent;
+use Modules\RH\Models\Scopes\MarinFiltreParUniteScope;
 
 class Marin extends Model
 {
@@ -58,6 +59,8 @@ class Marin extends Model
 
     protected static function booted(): void
     {
+        static::addGlobalScope(new MarinFiltreParUniteScope);
+
         static::creating(function (Marin $marin) {
             // Modification de la regle status pour les Tests (pour pouvoir mettre un autre status lors de la creation)
             // $data = ["status" => "pending_uuid_confirmation"];
@@ -93,6 +96,28 @@ class Marin extends Model
     public function unite()
     {
         return $this->belongsTo(Unite::class, "unite_id", "id");
+    }
+
+    public function getUnite(bool $explore_user = false)
+    {
+        $unite = $this->unite;
+		if ( $unite != null ) return $unite;
+
+        if ($explore_user){
+            /** Si explore_user est true, on essaye de trouver la réponse dans la fiche User associee */
+            $user = $this->getUser();
+            return $user?->getUnite(explore_marin: false);
+        }
+
+        return null;
+    }
+
+    public function setUnite(?Unite $unite): void
+    {
+        $this->unite_id = $unite?->id;
+
+        $this->user?->setUnite($unite);
+        $this->save();
     }
 
     public function user()
@@ -151,7 +176,9 @@ class Marin extends Model
 
     public static function fromUser(BaseUser $user): Marin|null
     {
-        $marin =  static::where("user_id", $user->id)->first();
+        /** Il faut retirer le global scope, parce que sinon, on rentre dans une boucle infinie, 
+         * le modèle appelant le scope, qui appelle le modèle, etc. */
+        $marin =  static::withoutGlobalScope(MarinFiltreParUniteScope::class)->where("user_id", $user->id)->first();
 
         return $marin;
     }

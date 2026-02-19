@@ -4,14 +4,17 @@ namespace Modules\RH\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
-use Modules\RH\Events\UnMarinDoitEtreCreeEvent;
-use Modules\RH\Listeners\CreateMarinListerner;
+use Modules\RH\Events;
+use Modules\RH\Listeners;
 
 class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
-        UnMarinDoitEtreCreeEvent::class => [
-            CreateMarinListerner::class,
+        Events\UnMarinDoitEtreCreeEvent::class => [
+            Listeners\CreateMarinListener::class,
         ],
+        Events\UneUniteDoitEtreAttribueeAUnUtilisateurEvent::class => [
+            Listeners\AttribueUniteAUnUtilisateurListener::class
+        ]
     ];
 }

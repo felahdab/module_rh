@@ -2,14 +2,6 @@
 
 namespace Modules\RH\Providers\Filament;
 
-use Filament\Http\Middleware\Authenticate;
-use Filament\Http\Middleware\DisableBladeIconComponents;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages;
-use Filament\Panel;
-use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -18,18 +10,29 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+use Filament\Http\Middleware\Authenticate;
+use Filament\Http\Middleware\DisableBladeIconComponents;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Pages;
+use Filament\Panel;
+use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
+use Filament\Widgets;
+use Filament\FontProviders\SpatieGoogleFontProvider;
+use Filament\Navigation\NavigationItem;
+use Filament\Pages\Dashboard;
+use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationBuilder;
+use Filament\Navigation\MenuItem;
+use Filament\Facades\Filament;
+
 use App\Filament\AvatarProviders\AnnudefAvatarProvider;
 use App\Providers\Filament\Traits\UsesSkeletorPrefixAndMultitenancyTrait;
-
 use App\Http\Middleware\InitializeTenancyByPath;
 use App\Http\Middleware\SetTenantCookieMiddleware;
 use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
 use App\Filament\Pages\UserPreferences;
 
-use Filament\Navigation\NavigationItem;
-use Filament\Pages\Dashboard;
-use Filament\Navigation\NavigationGroup;
-use Filament\Navigation\NavigationBuilder;
 use Modules\RH\Filament\RH\Resources\MarinResource;
 
 class RHPanelProvider extends PanelProvider
@@ -79,9 +82,27 @@ class RHPanelProvider extends PanelProvider
             ])
             // Menu Side Bar Haut
             ->topNavigation()
-            ->navigationItems([   
+            ->userMenuItems($this->getConditionalUserMenuItems());
+    }
 
-            ]);
+    /**
+     * Menu utilisateur conditionnel (MEnu Avatar)
+     */
+    private function getConditionalUserMenuItems(): array
+    {
+        $menuItems = [
+            'help' => MenuItem::make()
+                ->label('Aide')
+                ->icon('heroicon-m-question-mark-circle')
+                ->url(fn () => url(config('skeletor.prefixe_instance') . '/docs/' . Filament::getCurrentPanel()->getId()) . '/', shouldOpenInNewTab: true),
+            
+            'apidoc' => MenuItem::make()
+                ->label('API')
+                ->icon('heroicon-m-cloud')
+                ->url(fn () => url(route('l5-swagger.default.api')), shouldOpenInNewTab: true),
+        ];
+
+        return $menuItems;
     }
 
     protected function getModuleNamespace(): string

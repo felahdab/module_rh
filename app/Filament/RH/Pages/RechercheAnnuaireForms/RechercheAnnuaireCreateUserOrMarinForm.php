@@ -14,17 +14,17 @@ use Filament\Forms;
  
 use App\Models\Role;
 use App\Models\User;
+
 use Modules\RH\Models\Marin;
 use Modules\RH\Models\Grade;
 use Modules\RH\Models\Specialite;
 use Modules\RH\Models\Brevet;
 use Modules\RH\Models\Unite;
 
+use Modules\RH\Services\AnnudefUniteService;
  
 class RechercheAnnuaireCreateUserOrMarinForm
 {
-    
- 
     public static function getSchema()
     {
     return [
@@ -43,10 +43,7 @@ class RechercheAnnuaireCreateUserOrMarinForm
                    
                     Toggle::make('user')
                         ->visible(function ($record) {
-                            // VISIBLE seulement si : admin complet ET utilisateur n'existe pas
-                             return 
-                            //static::canAccessAdminMenus()  &&
-                                   User::where('email', $record->email)->first() == null;
+                             return User::where('email', $record->email)->first() == null;
                         })
                         ->label("Créer un compte utilisateur ?")
                         ->live(),
@@ -66,14 +63,25 @@ class RechercheAnnuaireCreateUserOrMarinForm
                         ->multiple()
                         ->requiredIf('user', true)
                         ->default([]),
- 
-                        // Message informatif pour les non-admins
-                //     Forms\Components\Placeholder::make('access_denied')
-                //     ->label("Accès limité")
-                //     ->visible(function () {
-                //         return !static::canAccessAdminMenus();
-                //     })
-                //     ->content("Seuls les administrateurs peuvent créer des comptes utilisateurs et des fiches marin depuis cette interface."),
+                    
+                    Forms\Components\Toggle::make('attribuer_unite')
+                        ->label("Attribuer une unité à cet utilisateur ?")
+                        ->visible(function ($record, Get $get) {
+                            return $get('user') === true;
+                        })
+                        ->live(),
+                    
+                    Forms\Components\Select::make('unite_id')
+                        ->visible(function ($record, Get $get) {
+                            return $get('attribuer_unite') === true;
+                        })
+                        ->label("Unite à attribuer")
+                        ->helperText("Si une unité est présélectionnée, c'est qu'elle a été identifiée sur la base de la branche ANNUDEF de cet utilisateur.")
+                        ->options(function() {
+                            return Unite::orderBy('libelle_long')->pluck("libelle_long", "id");
+                        })
+                        ->requiredIf('attribuer_unite', true),
+
                  ]),
                
             Step::make('Marin')
@@ -131,14 +139,6 @@ class RechercheAnnuaireCreateUserOrMarinForm
                                 ->label("Unite")
                                 ->options(Unite::all()->pluck('libelle_long', 'id')),
                         ]),
-                       
-                    // Message informatif pour les non-admins
-                    // Forms\Components\Placeholder::make('access_denied')
-                    //     ->label("Accès limité")
-                    //     ->visible(function () {
-                    //         return !static::canAccessAdminMenus();
-                    //     })
-                    //     ->content("Seuls les administrateurs peuvent créer des comptes utilisateurs et des fiches marin depuis cette interface."),
                 ]),
         ];
     }

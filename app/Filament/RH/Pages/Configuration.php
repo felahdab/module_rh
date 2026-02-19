@@ -64,7 +64,7 @@ class Configuration extends Page implements HasForms, HasActions
                 Select::make('unite_par_defaut')
                     ->label("Unité locale")
                     ->helperText("Cette unité sera celle utilisée par défaut pour les données RH locales.")
-                    ->options(Unite::all()->pluck('libelle_long', 'id')),
+                    ->options(Unite::orderBy('libelle_long')->pluck('libelle_long', 'id')),
                 Toggle::make('use_remote_rh_server')
                     ->label("Utiliser un serveur RH distant ?")
                     ->live(),

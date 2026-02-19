@@ -13,25 +13,12 @@ use App\Filament\PanelRegistry\ModuleDefinedMenusRegistry;
 use App\Filament\PanelRegistry\ModuleDefinedPreferedPagesRegistry;
 
 use Modules\RH\Console\ResetTestDatabase;
-use Modules\RH\Models\Brevet;
-use Modules\RH\Policies\BrevetPolicy;
 
-use Modules\RH\Models\Grade;
-use Modules\RH\Policies\GradePolicy;
-
-use Modules\RH\Models\Marin;
-use Modules\RH\Policies\MarinPolicy;
-
-use Modules\RH\Models\Specialite;
-use Modules\RH\Policies\SpecialitePolicy;
-
-use Modules\RH\Models\Unite;
-use Modules\RH\Policies\UnitePolicy;
-
-use Modules\RH\Models\TypeUnite;
-use Modules\RH\Policies\TypeUnitePolicy;
+use Modules\RH\Models;
+use Modules\RH\Policies;
 
 use Modules\RH\Filament\RH\Resources\MarinResource\Pages\ListMarins;
+use Modules\RH\Filament\RH\Resources\UserResource\Pages\ListUsers;
 
 
 class RHServiceProvider extends ServiceProvider
@@ -50,6 +37,7 @@ class RHServiceProvider extends ServiceProvider
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
+        $this->registerDocumentation();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'database/migrations'));
     }
 
@@ -68,17 +56,25 @@ class RHServiceProvider extends ServiceProvider
     public function registerPolicies()
     {
         $policies = [
-            Brevet::class => BrevetPolicy::class,
-            Grade::class => GradePolicy::class,
-            Marin::class => MarinPolicy::class,
-            Specialite::class => SpecialitePolicy::class,
-            Unite::class => UnitePolicy::class,
-            TypeUnite::class => TypeUnitePolicy::class
+            Models\User::class => Policies\UserPolicy::class,
+            Models\Brevet::class => Policies\BrevetPolicy::class,
+            Models\Grade::class => Policies\GradePolicy::class,
+            Models\Marin::class => Policies\MarinPolicy::class,
+            Models\Specialite::class => Policies\SpecialitePolicy::class,
+            Models\Unite::class => Policies\UnitePolicy::class,
+            Models\TypeUnite::class => Policies\TypeUnitePolicy::class
 
         ];
         foreach ($policies as $model => $policy){
             Gate::policy($model, $policy);
         }
+    }
+
+    protected function registerDocumentation()
+    {
+        $this->publishes([
+             module_path($this->moduleName, 'resources/docs') => public_path('docs/RH')
+         ], 'doc');
     }
 
     public function registerDirectMenuItems()
@@ -92,7 +88,11 @@ class RHServiceProvider extends ServiceProvider
                         ->name('Gestion des marins')
                         ->url(fn() => ListMarins::getUrl(panel: "RH"))
                         ->visible(function() {return auth()->check() && auth()->user()->can('rh::marins.index'); }),
-                ])
+                    DirectMenuItem::make()
+                        ->name('Gestion des utilisateurs')
+                        ->url(fn() => ListUsers::getUrl(panel: "RH"))
+                        ->visible(function() {return auth()->check() && auth()->user()->can('rh::marins.index'); }),
+                ]),
         ]);
    
     }

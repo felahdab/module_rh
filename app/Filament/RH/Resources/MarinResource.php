@@ -18,20 +18,14 @@ use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Facades\Filament;
-use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Notifications\Notification;
 
-use Filament\Tables\Columns\IconColumn;
+use App\Models\Setting;
 
-
-
+use Modules\RH\Models\Unite;
 use Modules\RH\Jobs\ConfirmMarinUuidJob;
 
 class MarinResource extends Resource
@@ -104,6 +98,10 @@ class MarinResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->description("Cette table affiche la liste des fiches de marin et permet notamment de savoir si les utilisateurs sont associés à une unité.
+                La visibilité de certaines informations ou fonctionnalités est conditionnée par le fait que l'utilisateur est assigné à une unité ou pas.
+                Les règles précises dépendent de chaque module. Pour pouvoir attribuer une unité, vous devez disposer de l'autorisation 
+                rh::attribuer_une_unite_a_un_utilisateur")
             ->defaultSort('nom','asc')
             ->columns([
                 TextColumn::make('id')
@@ -194,6 +192,7 @@ class MarinResource extends Resource
                         'title' => 'Vérifier avec le serveur distant',
                         'class' => 'btn-modif',
                         ])
+                    ->visible(fn() => Setting::forKey("rh")->get("use_remote_rh_server") != null)
                     ->action(function(Marin $record)
                     {
                         ConfirmMarinUuidJob::dispatch($record->uuid);
