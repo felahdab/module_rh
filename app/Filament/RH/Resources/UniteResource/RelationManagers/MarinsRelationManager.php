@@ -2,6 +2,7 @@
 
 namespace Modules\RH\Filament\RH\Resources\UniteResource\RelationManagers;
 
+use Filament\Schemas\Schema;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -14,7 +15,7 @@ class MarinsRelationManager extends RelationManager
 {
     protected static string $relationship = 'marins';
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->schema([

@@ -1,7 +1,7 @@
 <?php
 namespace Modules\RH\Filament\RH\Resources\UserResource\Actions;
 
-use Filament\Tables\Actions\Action;
+use Filament\Actions\Action;
 use Filament\Forms;
 
 use Modules\RH\Models\Unite;
