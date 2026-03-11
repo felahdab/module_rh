@@ -1,3 +1,8 @@
+## 0.2.1 (March 11, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.0 –> 0.2.1
+- Implements Art #713160 : Correction bug Exception pour la creation User Retouche de la Resource Marin RH avec  des filtres Avec/Sans Utilisateurs Creation Action Builker pour la creation User Marin
+- Début de documentation du module.
+
 ## 0.2.0 (February 19, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.1.2 –> 0.2.0
 - Ajustements pour supporter Filament V4 (donc Skeletor v4.0.0 +)
