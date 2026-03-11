@@ -6,146 +6,107 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\RH\Models\Marin;
 use Modules\RH\Models\User;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use PHPUnit\Framework\Attributes\Test;
-use Illuminate\Support\Facades\Artisan;
 
-/**
- * Pour inteliphisense qui me souligne en rouge user
- * @property \App\Models\User @adminUser
- * 
- */
-class CreationUtilisateurDepuisMarinTest extends TestCase
-{
+uses(RefreshDatabase::class);
+uses(TestCase::class);
 
-    use RefreshDatabase;
+pest()->group("RH");
 
-    /**
-     *  Pour inteliphisense qui me souligne en rouge adminUser
-     * @var User
-     */
-    protected $adminUser;
+beforeEach(function () {
+    $this->adminUser = User::factory()->create(["admin" => 1]); 
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        // Artisan::call("skeletor:generate-permissions");
+it('cree un utilisateur a partir d un marin', function(){
+    // Connecter l'utilisateur admin
+    $this->actingAs($this->adminUser);
 
-        // // Verifie et Créer les permissions et les rôles si necessaire
-        // if(!Permission::where('name','users.store')->exists()) {
-        //    Permission::create(['name' => 'users.store', 'guard_name' => 'web']); 
-        // }
+    // Créer un marin
+    $marin = Marin::create([
+        'uuid' => 'test-uuid',
+        'nid' => 'NID12345',
+        'nom' => 'Test Nom',
+        'prenom' => 'Test Prenom',
+        'email' => 'NID12345@example.com',
+        'data' => ['status' => 'pending'],
+    ]);
 
-        // if(!Role::where('name','admin')->exists()) {
-        // $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'web']);
-        // $adminRole->givePermissionTo('users.store');
-        // }else{
-        //     $adminRole= Role::where('name','admin')->first();
-        // }
+    // Vérifier que le marin n'a pas encore d'utilisateur associé
+    $this->assertNull($marin->user);
 
-        // Créer un utilisateur avec le rôle admin
-        $this->adminUser = User::factory()->create(["admin" => 1]); 
-        //$this->adminUser->assignRole($adminRole);  
-    }
+    // Créer un utilisateur pour le marin
+    $user = $marin->createUser();
 
-    #[Test]
-    public function testCreationUtilisateurDepuisMarin()
-    {
-        // Connecter l'utilisateur admin
-        $this->actingAs($this->adminUser);
+    // Vérifier que l'utilisateur a été créé et associé au marin
+    $this->assertNotNull($user);
+    $this->assertEquals($user->id, $marin->user_id);
+    $this->assertEquals($marin->nom, $user->nom);
+    $this->assertEquals($marin->nid . '@example.com', $user->email);
 
-        // Créer un marin
-        $marin = Marin::create([
-            'uuid' => 'test-uuid',
-            'nid' => 'NID12345',
-            'nom' => 'Test Nom',
-            'prenom' => 'Test Prenom',
-            'email' => 'NID12345@example.com',
-            'data' => ['status' => 'pending'],
-        ]);
+    // Vérifier que le marin a maintenant un utilisateur associé
+    $this->assertNotNull($marin->fresh()->user);
+});
 
-        // Vérifier que le marin n'a pas encore d'utilisateur associé
-        $this->assertNull($marin->user);
+it('cree un utilisateur a partir d un marin quand un utilisateur avec le meme mail existe deja BugFix 713160', function(){
+    // Bugfix 713160: ecrire un test permettant de verifier la non-regression apres le bugfix:
+    // Creer un marin
+    // Creer un user avec la même adresse phemail
+    // Provoquer le marin->createUser()
+    // 
+    // Résultat
+    // - ne doit pas provoquer d'exception
+    // - doit associer le marin et le user qui existent tous les deux
+    
+    
+    $this->actingAs($this->adminUser);
 
-        // Créer un utilisateur pour le marin
+    // ✅ 1. Créer un marin
+    $marin = Marin::create([
+        'uuid'   => 'test-uuid-bugfix',
+        'nid'    => 'NID99999',
+        'nom' => 'Test Nom2',
+        'prenom' => 'Test Prenom2',
+        'email'  => 'NID99999@example.com',
+        'data' => ['status' => 'pending'],
+    ]);
+
+    // ✅ 2. Créer un user avec la même adresse email, non rattaché au marin
+    $existingUser = \App\Models\User::create([
+        'nom' => 'Test Nom2',
+        'prenom' => 'Test Prenom2',
+        'email'    => 'NID99999@example.com',
+        'password' => bcrypt('password'),
+    ]);
+
+    // Vérifier l'état initial — marin et user existent mais ne sont pas rattachés
+    $this->assertNull($marin->user);
+    $this->assertNotNull($existingUser);
+
+    // ✅ 3. Provoquer createUser() — ne doit PAS lever d'exception
+    $user = null;
+    $exception = null;
+
+    try {
         $user = $marin->createUser();
-
-        // Vérifier que l'utilisateur a été créé et associé au marin
-        $this->assertNotNull($user);
-        $this->assertEquals($user->id, $marin->user_id);
-        $this->assertEquals($marin->nom, $user->nom);
-        $this->assertEquals($marin->nid . '@example.com', $user->email);
-
-        // Vérifier que le marin a maintenant un utilisateur associé
-        $this->assertNotNull($marin->fresh()->user);
+    } catch (\Exception $e) {
+        $exception = $e;
     }
 
-    #[Test]
-    public function testCreationUtilisateurDepuisMarinSiUserAvecEmailExisteDeja()
-    {
-        // Bugfix 713160: ecrire un test permettant de verifier la non-regression apres le bugfix:
-        // Creer un marin
-        // Creer un user avec la même adresse phemail
-        // Provoquer le marin->createUser()
-        // 
-        // Résultat
-        // - ne doit pas provoquer d'exception
-        // - doit associer le marin et le user qui existent tous les deux
-        
-        
-        $this->actingAs($this->adminUser);
+    // ✅ 4. Pas d'exception
+    $this->assertNull($exception, 'createUser() a levé une exception : ' . $exception?->getMessage());
 
-        // ✅ 1. Créer un marin
-        $marin = Marin::create([
-            'uuid'   => 'test-uuid-bugfix',
-            'nid'    => 'NID99999',
-            'nom' => 'Test Nom2',
-            'prenom' => 'Test Prenom2',
-            'email'  => 'NID99999@example.com',
-            'data' => ['status' => 'pending'],
-        ]);
-    
-        // ✅ 2. Créer un user avec la même adresse email, non rattaché au marin
-        $existingUser = \App\Models\User::create([
-            'nom' => 'Test Nom2',
-            'prenom' => 'Test Prenom2',
-            'email'    => 'NID99999@example.com',
-            'password' => bcrypt('password'),
-        ]);
-    
-        // Vérifier l'état initial — marin et user existent mais ne sont pas rattachés
-        $this->assertNull($marin->user);
-        $this->assertNotNull($existingUser);
-    
-        // ✅ 3. Provoquer createUser() — ne doit PAS lever d'exception
-        $user = null;
-        $exception = null;
-    
-        try {
-            $user = $marin->createUser();
-        } catch (\Exception $e) {
-            $exception = $e;
-        }
-    
-        // ✅ 4. Pas d'exception
-        $this->assertNull($exception, 'createUser() a levé une exception : ' . $exception?->getMessage());
-    
-        // ✅ 5. Le marin est maintenant rattaché à un user
-        $this->assertNotNull($marin->fresh()->user);
-    
-        // ✅ 6. Le user rattaché est bien l'existant (pas un nouveau créé)
-        $this->assertEquals($existingUser->id, $marin->fresh()->user_id);
-    
-        // ✅ 7. Pas de doublon — un seul user avec cet email
-        $this->assertEquals(
-            1,
-            \App\Models\User::where('email', 'NID99999@example.com')->count(),
-            'Un doublon de user a été créé alors qu\'un user avec cet email existait déjà'
-        );
+    // ✅ 5. Le marin est maintenant rattaché à un user
+    $this->assertNotNull($marin->fresh()->user);
+
+    // ✅ 6. Le user rattaché est bien l'existant (pas un nouveau créé)
+    $this->assertEquals($existingUser->id, $marin->fresh()->user_id);
+
+    // ✅ 7. Pas de doublon — un seul user avec cet email
+    $this->assertEquals(
+        1,
+        \App\Models\User::where('email', 'NID99999@example.com')->count(),
+        'Un doublon de user a été créé alors qu\'un user avec cet email existait déjà'
+    );
     
 
-    }
+});
 
-    
-}
