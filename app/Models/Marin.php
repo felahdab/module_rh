@@ -243,6 +243,18 @@ class Marin extends Model
         // Bugfix 713160: rajouter ici une vérification pour déterminer si un utilisateur avec la même adresse email existe déjà.
         // Si un utilisateur avec la même adresse email existe déjà, ne pas essayer de créér un nouveau user, mais simplement faire
         // l'association avec le Marin.
+
+        // Bugfix 713160: un user avec le même email existe mais pas rattaché au marin
+        $existingUser = User::where('email', $this->email)->first();
+
+        if ($existingUser) {
+            $this->user()->associate($existingUser);
+            $this->save();
+            return $existingUser;
+        }
+    
+        // Aucun user existant → création normale
+    
         $user = User::create([
             'nom'   =>$this->nom,
             'prenom'=>$this->prenom,

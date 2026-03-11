@@ -22,6 +22,11 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Notifications\Notification;
+use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Actions\BulkAction;
+use Illuminate\Database\Eloquent\Collection;
+
 
 use App\Models\Setting;
 
@@ -162,7 +167,20 @@ class MarinResource extends Resource
                     //->visible(fn (?Marin $record)=> $record && $record->user !== null),    
             ])
             ->filters([
-                //
+                SelectFilter::make('utilisateur')
+                    ->label('Utilisateur')
+                    ->options([
+                        'avec'  => 'Avec utilisateur',
+                        'sans'  => 'Sans utilisateur',
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return match($data['value'] ?? null) {
+                            'avec'  => $query->whereHas('user'),
+                            'sans'  => $query->whereDoesntHave('user'),
+                            default => $query,
+                        };
+                }),
+
             ])
             ->recordActions([
                 EditAction::make()
@@ -231,6 +249,44 @@ class MarinResource extends Resource
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+
+                    BulkAction::make('creer_utilisateurs')
+                    ->label('Créer les utilisateurs')
+                    ->icon('heroicon-o-user-plus')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalDescription('Cela créera un compte de connexion pour chaque marin sélectionné qui n\'en possède pas encore.')
+                    ->deselectRecordsAfterCompletion()
+                    ->action(function (Collection $records): void {
+                        $success = 0;
+                        $skipped = 0;
+                        $errors  = 0;
+            
+                        foreach ($records as $marin) {
+                            // ✅ Ignore les marins qui ont déjà un user
+                            if ($marin->user !== null) {
+                                $skipped++;
+                                continue;
+                            }
+            
+                            try {
+                                $user = $marin->createUser();
+                                $user ? $success++ : $errors++;
+                            } catch (\Exception $e) {
+                                $errors++;
+                            }
+                        }
+            
+                        // ✅ Notification récap
+                        Notification::make()
+                            ->title('Création des utilisateurs terminée')
+                            ->body("✅ Créés : $success | ⏭ Déjà existants : $skipped | ❌ Erreurs : $errors")
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(fn () => auth()->user()->can('users.store')),
+            
+            
                 ]),
             ]);
     }

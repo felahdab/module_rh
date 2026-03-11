@@ -86,13 +86,65 @@ class CreationUtilisateurDepuisMarinTest extends TestCase
     {
         // Bugfix 713160: ecrire un test permettant de verifier la non-regression apres le bugfix:
         // Creer un marin
-        // Creer un user avec la même adresse email
+        // Creer un user avec la même adresse phemail
         // Provoquer le marin->createUser()
         // 
-        // Résultat:
+        // Résultat
         // - ne doit pas provoquer d'exception
         // - doit associer le marin et le user qui existent tous les deux
-        $this->assertTrue(false);
+        
+        
+        $this->actingAs($this->adminUser);
+
+        // ✅ 1. Créer un marin
+        $marin = Marin::create([
+            'uuid'   => 'test-uuid-bugfix',
+            'nid'    => 'NID99999',
+            'nom' => 'Test Nom2',
+            'prenom' => 'Test Prenom2',
+            'email'  => 'NID99999@example.com',
+            'data' => ['status' => 'pending'],
+        ]);
+    
+        // ✅ 2. Créer un user avec la même adresse email, non rattaché au marin
+        $existingUser = \App\Models\User::create([
+            'nom' => 'Test Nom2',
+            'prenom' => 'Test Prenom2',
+            'email'    => 'NID99999@example.com',
+            'password' => bcrypt('password'),
+        ]);
+    
+        // Vérifier l'état initial — marin et user existent mais ne sont pas rattachés
+        $this->assertNull($marin->user);
+        $this->assertNotNull($existingUser);
+    
+        // ✅ 3. Provoquer createUser() — ne doit PAS lever d'exception
+        $user = null;
+        $exception = null;
+    
+        try {
+            $user = $marin->createUser();
+        } catch (\Exception $e) {
+            $exception = $e;
+        }
+    
+        // ✅ 4. Pas d'exception
+        $this->assertNull($exception, 'createUser() a levé une exception : ' . $exception?->getMessage());
+    
+        // ✅ 5. Le marin est maintenant rattaché à un user
+        $this->assertNotNull($marin->fresh()->user);
+    
+        // ✅ 6. Le user rattaché est bien l'existant (pas un nouveau créé)
+        $this->assertEquals($existingUser->id, $marin->fresh()->user_id);
+    
+        // ✅ 7. Pas de doublon — un seul user avec cet email
+        $this->assertEquals(
+            1,
+            \App\Models\User::where('email', 'NID99999@example.com')->count(),
+            'Un doublon de user a été créé alors qu\'un user avec cet email existait déjà'
+        );
+    
+
     }
 
     
