@@ -73,7 +73,7 @@ class RHServiceProvider extends ServiceProvider
     protected function registerDocumentation()
     {
         $this->publishes([
-             module_path($this->moduleName, 'resources/docs') => public_path('docs/RH')
+             module_path($this->moduleName, 'resources/docs') => base_path('resources/docs/RH')
          ], 'doc');
     }
 
