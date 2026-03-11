@@ -234,11 +234,11 @@ class Marin extends Model
      *
      * @return Marin Creation User de Marin
      */
-    public  function createUser()
+    public  function createUser(): User
     {
         // User existe deja
         if ($this->user){
-            return null;
+            return $this->user;
         }
         // Bugfix 713160: rajouter ici une vérification pour déterminer si un utilisateur avec la même adresse email existe déjà.
         // Si un utilisateur avec la même adresse email existe déjà, ne pas essayer de créér un nouveau user, mais simplement faire

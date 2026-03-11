@@ -38,7 +38,7 @@ class EditMarin extends EditRecord
                         }
                     })
                 ->requiresConfirmation()
-                ->visible(fn () => auth()->user()->can('users.store')),
+                ->visible(fn ($record) => auth()->user()->can('users.store') && $record->user == null),
                
         ];
     }
