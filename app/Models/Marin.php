@@ -240,7 +240,9 @@ class Marin extends Model
         if ($this->user){
             return null;
         }
-
+        // Bugfix 713160: rajouter ici une vérification pour déterminer si un utilisateur avec la même adresse email existe déjà.
+        // Si un utilisateur avec la même adresse email existe déjà, ne pas essayer de créér un nouveau user, mais simplement faire
+        // l'association avec le Marin.
         $user = User::create([
             'nom'   =>$this->nom,
             'prenom'=>$this->prenom,

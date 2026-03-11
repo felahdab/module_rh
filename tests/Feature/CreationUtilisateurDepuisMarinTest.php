@@ -81,5 +81,19 @@ class CreationUtilisateurDepuisMarinTest extends TestCase
         $this->assertNotNull($marin->fresh()->user);
     }
 
+    #[Test]
+    public function testCreationUtilisateurDepuisMarinSiUserAvecEmailExisteDeja()
+    {
+        // Bugfix 713160: ecrire un test permettant de verifier la non-regression apres le bugfix:
+        // Creer un marin
+        // Creer un user avec la même adresse email
+        // Provoquer le marin->createUser()
+        // 
+        // Résultat:
+        // - ne doit pas provoquer d'exception
+        // - doit associer le marin et le user qui existent tous les deux
+        $this->assertTrue(false);
+    }
+
     
 }
