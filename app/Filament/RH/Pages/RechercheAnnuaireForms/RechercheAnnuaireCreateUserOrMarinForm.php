@@ -137,7 +137,7 @@ class RechercheAnnuaireCreateUserOrMarinForm
                                 ->options(Brevet::all()->pluck('libelle_long', 'id')),
                             Select::make('unite_id')
                                 ->label("Unite")
-                                ->options(Unite::all()->pluck('libelle_long', 'id')),
+                                ->options(Unite::orderBy('libelle_long')->pluck('libelle_long', 'id')),
                         ]),
                 ]),
         ];
