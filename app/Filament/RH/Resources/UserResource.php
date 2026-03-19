@@ -70,8 +70,7 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('unite')
                     ->label("Unité")
-                    ->formatStateUsing(fn($record) => $record->getUnite()?->libelle_long ?? "N/A")
-                    ->searchable(),
+                    ->formatStateUsing(fn($record) => $record->getUnite()?->libelle_long ?? "N/A"),
                 Tables\Columns\IconColumn::make('admin')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
