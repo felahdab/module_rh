@@ -1,3 +1,8 @@
+## 0.2.3 (March 20, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.2 –> 0.2.3
+- Implements artifact #715977 Retrait de l'attribut searchable de la colone "unité".
+- Implements artifact #687886: ordonne la liste des unités du Wizard de création d'un marin par ordre alphabétique.
+
 ## 0.2.2 (March 11, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.1 –> 0.2.2
 - Ajustement de l'action "Creer l'utilisateur" de la page d'édition du Marin. Ajustement de la méthode createUser pour qu'elle renvoit toujours l'utilisateur créé ou associé au Marin.
