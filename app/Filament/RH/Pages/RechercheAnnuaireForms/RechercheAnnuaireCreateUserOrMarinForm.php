@@ -25,8 +25,9 @@ use Modules\RH\Services\AnnudefUniteService;
  
 class RechercheAnnuaireCreateUserOrMarinForm
 {
-    public static function getSchema()
+    public static function getSchema(array|string|null $rolePrefixes = null)
     {
+        $prefixes= $rolePrefixes ? (array) $rolePrefixes : null;
     return [
         Step::make('Utilisateur')
                 ->hidden(fn ($record) => ! auth()->user()->can('create', User::class) || User::where('email', $record->email)->first() != null)
@@ -57,8 +58,19 @@ class RechercheAnnuaireCreateUserOrMarinForm
                                    $get('user') === true;
                         })
                         ->label("Rôles à attribuer")
-                        ->options(function() {
-                            return Role::all()->pluck('name', 'id');
+                        // ->options(function() {
+                        //     return Role::all()->pluck('name', 'id');
+                        // })
+                        ->options(function() use ($prefixes) {
+                            $query = Role::query();
+                            if ($prefixes) {
+                                $query->where(function ($q) use ($prefixes) {
+                                    foreach ($prefixes as $prefix) {
+                                        $q->orWhere('name', 'like', $prefix . '::%');
+                                    }
+                                });
+                            }
+                            return $query->pluck('name', 'id');
                         })
                         ->multiple()
                         ->requiredIf('user', true)
