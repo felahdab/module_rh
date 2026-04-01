@@ -1,3 +1,8 @@
+## 0.2.4 (April 01, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.3 –> 0.2.4
+- Implements art #729207 : le formulaire de création des utilisateurs de la recherche Annudef peut désormais recevoir un préfixe qui limitera la liste des rôles proposés à l'utilisateur. Permet de restreindre les rôles qu'un utilisateur peut attribuer à un nouvel utilisateur qu'il créé.
+- php-cs-fixer
+
 ## 0.2.3 (March 20, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.2 –> 0.2.3
 - Implements artifact #715977 Retrait de l'attribut searchable de la colone "unité".
