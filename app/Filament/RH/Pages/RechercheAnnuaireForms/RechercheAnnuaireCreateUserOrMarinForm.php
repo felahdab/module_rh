@@ -1,131 +1,127 @@
 <?php
- 
+
 namespace Modules\RH\Filament\RH\Pages\RechercheAnnuaireForms;
- 
-use Filament\Schemas\Components\Wizard\Step;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms;
- 
+
 use App\Models\Role;
 use App\Models\User;
-
-use Modules\RH\Models\Marin;
-use Modules\RH\Models\Grade;
-use Modules\RH\Models\Specialite;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Wizard\Step;
 use Modules\RH\Models\Brevet;
+use Modules\RH\Models\Grade;
+use Modules\RH\Models\Marin;
+use Modules\RH\Models\Specialite;
 use Modules\RH\Models\Unite;
 
-use Modules\RH\Services\AnnudefUniteService;
- 
 class RechercheAnnuaireCreateUserOrMarinForm
 {
     public static function getSchema(array|string|null $rolePrefixes = null)
     {
-        $prefixes= $rolePrefixes ? (array) $rolePrefixes : null;
-    return [
-        Step::make('Utilisateur')
-                ->hidden(fn ($record) => ! auth()->user()->can('create', User::class) || User::where('email', $record->email)->first() != null)
+        $prefixes = $rolePrefixes ? (array) $rolePrefixes : null;
+
+        return [
+            Step::make('Utilisateur')
+                ->hidden(fn ($record) => !auth()->user()->can('create', User::class) || null != User::where('email', $record->email)->first())
                 ->schema([
                     Placeholder::make('utilisateur_deja_connu')
-                        ->label("Un utilisateur avec cette adresse email est déjà connu")
+                        ->label('Un utilisateur avec cette adresse email est déjà connu')
                         ->disabled()
-                        ->visible(fn($record) => User::where('email', $record->email)->first() != null)
-                        ->content(function($record)
-                        {
+                        ->visible(fn ($record) => null != User::where('email', $record->email)->first())
+                        ->content(function ($record) {
                             $user = User::where('email', $record->email)->first();
-                            return $user->display_name . '/' . $user->email ;
+
+                            return $user->display_name.'/'.$user->email;
                         }),
-                   
+
                     Toggle::make('user')
                         ->visible(function ($record) {
-                             return User::where('email', $record->email)->first() == null;
+                            return null == User::where('email', $record->email)->first();
                         })
-                        ->label("Créer un compte utilisateur ?")
+                        ->label('Créer un compte utilisateur ?')
                         ->live(),
-                   
+
                     Select::make('roles')
                         ->visible(function ($record, Get $get) {
                             // VISIBLE seulement si : admin complet ET utilisateur n'existe pas ET toggle activé
-                            return 
-                            //static::canAccessAdminMenus() &&
-                                   User::where('email', $record->email)->first() == null &&
-                                   $get('user') === true;
+                            return
+                            // static::canAccessAdminMenus() &&
+                                   null == User::where('email', $record->email)->first()
+                                   && true === $get('user');
                         })
-                        ->label("Rôles à attribuer")
+                        ->label('Rôles à attribuer')
                         // ->options(function() {
                         //     return Role::all()->pluck('name', 'id');
                         // })
-                        ->options(function() use ($prefixes) {
+                        ->options(function () use ($prefixes) {
                             $query = Role::query();
                             if ($prefixes) {
                                 $query->where(function ($q) use ($prefixes) {
                                     foreach ($prefixes as $prefix) {
-                                        $q->orWhere('name', 'like', $prefix . '::%');
+                                        $q->orWhere('name', 'like', $prefix.'::%');
                                     }
                                 });
                             }
+
                             return $query->pluck('name', 'id');
                         })
                         ->multiple()
                         ->requiredIf('user', true)
                         ->default([]),
-                    
-                    Forms\Components\Toggle::make('attribuer_unite')
-                        ->label("Attribuer une unité à cet utilisateur ?")
+
+                    Toggle::make('attribuer_unite')
+                        ->label('Attribuer une unité à cet utilisateur ?')
                         ->visible(function ($record, Get $get) {
-                            return $get('user') === true;
+                            return true === $get('user');
                         })
                         ->live(),
-                    
-                    Forms\Components\Select::make('unite_id')
+
+                    Select::make('unite_id')
                         ->visible(function ($record, Get $get) {
-                            return $get('attribuer_unite') === true;
+                            return true === $get('attribuer_unite');
                         })
-                        ->label("Unite à attribuer")
+                        ->label('Unite à attribuer')
                         ->helperText("Si une unité est présélectionnée, c'est qu'elle a été identifiée sur la base de la branche ANNUDEF de cet utilisateur.")
-                        ->options(function() {
-                            return Unite::orderBy('libelle_long')->pluck("libelle_long", "id");
+                        ->options(function () {
+                            return Unite::orderBy('libelle_long')->pluck('libelle_long', 'id');
                         })
                         ->requiredIf('attribuer_unite', true),
+                ]),
 
-                 ]),
-               
             Step::make('Marin')
-                ->visible(fn ($record) => auth()->user()->can('create', Marin::class) && Marin::where('nid', $record->nid)->first() == null)
+                ->visible(fn ($record) => auth()->user()->can('create', Marin::class) && null == Marin::where('nid', $record->nid)->first())
                 ->schema([
-                    Placeholder::make('marin_deja_connu')
-                        ->label("Un marin avec ce NID est déjà présent en base")
+                Placeholder::make('marin_deja_connu')
+                        ->label('Un marin avec ce NID est déjà présent en base')
                         ->disabled()
-                        ->visible(fn($record) => Marin::where('nid', $record->nid)->first() != null)
-                        ->content(function($record)
-                        {
+                        ->visible(fn ($record) => null != Marin::where('nid', $record->nid)->first())
+                        ->content(function ($record) {
                             $marin = Marin::where('nid', $record->nid)->first();
-                            return $marin->nom . ' ' . $marin->prenom . ' / ' . $marin->nid ;
+
+                            return $marin->nom.' '.$marin->prenom.' / '.$marin->nid;
                         }),
-                   
-                    Toggle::make('marin')
+
+                Toggle::make('marin')
                         ->visible(function ($record) {
                             // VISIBLE seulement si : admin complet ET marin n'existe pas
-                            return 
-                            //static::canAccessAdminMenus() &&
-                                   Marin::where('nid', $record->nid)->first() == null;
+                            return
+                            // static::canAccessAdminMenus() &&
+                                   null == Marin::where('nid', $record->nid)->first();
                         })
-                        ->label("Créer une fiche Marin ?")
+                        ->label('Créer une fiche Marin ?')
                         ->live(),
-                   
-                    Section::make('Données complémentaires pour la fiche du marin')
+
+                Section::make('Données complémentaires pour la fiche du marin')
                         ->visible(function ($record, Get $get) {
                             // VISIBLE seulement si : admin complet ET marin n'existe pas ET toggle activé
-                            return 
+                            return
                             // static::canAccessAdminMenus() &&
-                                   Marin::where('nid', $record->nid)->first() == null &&
-                                   $get('marin') === true;
+                                   null == Marin::where('nid', $record->nid)->first()
+                                   && true === $get('marin');
                         })
                         ->columns(4)
                         ->schema([
@@ -139,19 +135,19 @@ class RechercheAnnuaireCreateUserOrMarinForm
                             DatePicker::make('date_embarq'),
                             DatePicker::make('date_debarq'),
                             Select::make('grade_id')
-                                ->label("Grade")
+                                ->label('Grade')
                                 ->options(Grade::all()->pluck('libelle_long', 'id')),
                             Select::make('specialite_id')
-                                ->label("Specialite")
+                                ->label('Specialite')
                                 ->options(Specialite::all()->pluck('libelle_long', 'id')),
                             Select::make('brevet_id')
-                                ->label("Brevet")
+                                ->label('Brevet')
                                 ->options(Brevet::all()->pluck('libelle_long', 'id')),
                             Select::make('unite_id')
-                                ->label("Unite")
+                                ->label('Unite')
                                 ->options(Unite::orderBy('libelle_long')->pluck('libelle_long', 'id')),
                         ]),
-                ]),
+            ]),
         ];
     }
 }
