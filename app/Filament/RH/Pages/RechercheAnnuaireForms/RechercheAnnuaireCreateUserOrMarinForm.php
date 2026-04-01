@@ -12,6 +12,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Wizard\Step;
+use Illuminate\Support\Arr;
 use Modules\RH\Models\Brevet;
 use Modules\RH\Models\Grade;
 use Modules\RH\Models\Marin;
@@ -22,7 +23,7 @@ class RechercheAnnuaireCreateUserOrMarinForm
 {
     public static function getSchema(array|string|null $rolePrefixes = null)
     {
-        $prefixes = $rolePrefixes ? (array) $rolePrefixes : null;
+        $prefixes = Arr::wrap($rolePrefixes);
 
         return [
             Step::make('Utilisateur')
@@ -47,16 +48,11 @@ class RechercheAnnuaireCreateUserOrMarinForm
 
                     Select::make('roles')
                         ->visible(function ($record, Get $get) {
-                            // VISIBLE seulement si : admin complet ET utilisateur n'existe pas ET toggle activé
                             return
-                            // static::canAccessAdminMenus() &&
-                                   null == User::where('email', $record->email)->first()
-                                   && true === $get('user');
+                                null == User::where('email', $record->email)->first()
+                                && true === $get('user');
                         })
                         ->label('Rôles à attribuer')
-                        // ->options(function() {
-                        //     return Role::all()->pluck('name', 'id');
-                        // })
                         ->options(function () use ($prefixes) {
                             $query = Role::query();
                             if ($prefixes) {
@@ -107,19 +103,14 @@ class RechercheAnnuaireCreateUserOrMarinForm
 
                 Toggle::make('marin')
                         ->visible(function ($record) {
-                            // VISIBLE seulement si : admin complet ET marin n'existe pas
-                            return
-                            // static::canAccessAdminMenus() &&
-                                   null == Marin::where('nid', $record->nid)->first();
+                            return null == Marin::where('nid', $record->nid)->first();
                         })
                         ->label('Créer une fiche Marin ?')
                         ->live(),
 
                 Section::make('Données complémentaires pour la fiche du marin')
                         ->visible(function ($record, Get $get) {
-                            // VISIBLE seulement si : admin complet ET marin n'existe pas ET toggle activé
                             return
-                            // static::canAccessAdminMenus() &&
                                    null == Marin::where('nid', $record->nid)->first()
                                    && true === $get('marin');
                         })
