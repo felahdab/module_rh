@@ -1,3 +1,11 @@
+## 0.2.5 (April 09, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.4 –> 0.2.5
+- Implements artifact #696340: le module profite des évènements émis par Skeletor lors de la création d'un utilisateur. Il regarde si l'utilisateur a une information Annudef permettant de déterminer son unité d'affectation. Le cas échéant, il fait automatiquement l'association entre l'utilisateur et cette unité.
+- Par ailleurs, il regarde si l'utilisateur a un grade (de Marin) et un NID. Le cas échéant, une fiche de Marin est créée, renseignée des informations de grade, de NID et d'unité connue, et cette fiche est associée à l'utilisateur.
+
+- Merge branch 'tuleap-696340-a-la-creation-d-un-marin-depuis-la-recherche-annudef-verifier-si-un-utilisateur-existe-deja-et-pourrait-correspondre-et-proposer-l-association'
+- Création de tests unitaires pour vérifier le fonctionnement des listeners déclanchés sur création d'un utilisateur local.
+
 ## 0.2.4 (April 01, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.3 –> 0.2.4
 - Implements art #729207 : le formulaire de création des utilisateurs de la recherche Annudef peut désormais recevoir un préfixe qui limitera la liste des rôles proposés à l'utilisateur. Permet de restreindre les rôles qu'un utilisateur peut attribuer à un nouvel utilisateur qu'il créé.
