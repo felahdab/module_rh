@@ -4,10 +4,13 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use App\Models\Permission;
+use App\Events;
 
 use Modules\RH\Models\User;
 use Modules\RH\Models\Unite;
+use Modules\RH\Models\Grade;
 use Modules\RH\Models\Marin;
+use Modules\RH\Services\AnnudefGradeService;
  
 uses(RefreshDatabase::class);
 uses(TestCase::class);
@@ -142,4 +145,76 @@ it('un utilisateur associe a un marin et affecte a une unite ne peut voir que le
 
     $this->assertTrue(Marin::all()->contains($this->marin));
     $this->assertTrue(Marin::all()->contains($this->marin2));
+});
+
+it('lorsqu un evenement UnUtilisateurLocalAEteCreeEvent est recu, l utilisateur est associe a une unite si on en trouve une', function() {
+    # Test le listener AssocierUneUniteAUnNouvelUtilisateur
+    $user = User::factory()->create();
+    $unite = Unite::factory()->create(["libannudef" => "MARINE/ALFAN/FPS TOULON"]);
+    
+    $description = [
+        'nom' => $user->nom,
+        'prenom' => $user->prenom,
+        'email' => $user->email,
+        'unite' => "MARINE/ALFAN/FPS TOULON/CDT/TOTO",
+        "nid" => "123456789",
+        "gradelong" => "Capitaine de vaisseau"
+    ];
+
+    Events\UnUtilisateurLocalAEteCreeEvent::dispatch($description);
+
+    $user = cast_as_eloquent_descendant($user, User::class);
+    $user->refresh();
+    $this->assertTrue($user->getUnite()?->id == $unite->id);
+
+});
+
+it('lorsqu un evenement UnUtilisateurLocalAEteCreeEvent est recu, l utilisateur n est pas associe a une unite si on en trouve pas', function() {
+    # Test le listener AssocierUneUniteAUnNouvelUtilisateur
+    $user = User::factory()->create();
+    
+    $description = [
+        'nom' => $user->nom,
+        'prenom' => $user->prenom,
+        'email' => $user->email,
+        'unite' => "MARINE/ALFAN/FPS TOULON/CDT/TOTO",
+        "nid" => "123456789",
+        "gradelong" => "Capitaine de vaisseau"
+    ];
+
+    Events\UnUtilisateurLocalAEteCreeEvent::dispatch($description);
+
+    $user = cast_as_eloquent_descendant($user, User::class);
+    $user->refresh();
+    $this->assertTrue($user->getUnite()?->id == null);
+
+});
+
+it('lorsqu un evenement UnUtilisateurLocalAEteCreeEvent est recu, on cree un marin et on l associe', function() {
+    # Test le listener EssayerDeCreerUnMarinAssocieAUnNouvelUtilisateur
+    $user = User::factory()->create();
+    $unite = Unite::factory()->create(["libannudef" => "MARINE/ALFAN/FPS TOULON"]);
+    $grade = Grade::factory()->create([
+        "uuid" => "9d74f78a-47da-40c6-b8c1-0312a97e68b3",
+        "libelle_court" => "CV",
+        "libelle_long" => "Capitaine de vaisseau"
+    ]);
+    
+    $description = [
+        'nom' => $user->nom,
+        'prenom' => $user->prenom,
+        'email' => $user->email,
+        'unite' => "MARINE/ALFAN/FPS TOULON/CDT/TOTO",
+        "nid" => "123456789",
+        "gradelong" => "Capitaine de vaisseau"
+    ];
+
+    Events\UnUtilisateurLocalAEteCreeEvent::dispatch($description);
+
+    $user = cast_as_eloquent_descendant($user, User::class);
+    $user->refresh();
+    $this->assertTrue($user->marin != null);
+    $this->assertTrue($user->marin->unite_id == $unite->id);
+    $this->assertTrue($user->marin->grade_id == $grade->id);
+
 });

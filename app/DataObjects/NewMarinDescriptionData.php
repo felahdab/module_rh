@@ -9,7 +9,7 @@ class NewMarinDescriptionData extends Data
 {
     public function __construct(
         public ?string $nom,
-        public string $prenom,
+        public ?string $prenom,
         public ?string $matricule,
         public ?string $nid,
         public ?string $date_embarq,
