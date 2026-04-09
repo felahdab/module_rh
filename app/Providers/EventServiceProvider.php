@@ -6,6 +6,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 
 use Modules\RH\Events;
 use Modules\RH\Listeners;
+use App\Events\UnUtilisateurLocalAEteCreeEvent;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         Events\UneUniteDoitEtreAttribueeAUnUtilisateurEvent::class => [
             Listeners\AttribueUniteAUnUtilisateurListener::class
+        ],
+        UnUtilisateurLocalAEteCreeEvent::class => [
+            Listeners\AssocierUneUniteAUnNouvelUtilisateur::class,
+            Listeners\EssayerDeCreerUnMarinAssocieAUnNouvelUtilisateur::class
         ]
     ];
 }
