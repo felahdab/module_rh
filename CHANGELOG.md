@@ -1,3 +1,7 @@
+## 0.2.6 (April 15, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.5 –> 0.2.6
+- Ajustement du chemin de publication de la documentation.
+
 ## 0.2.5 (April 09, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.4 –> 0.2.5
 - Implements artifact #696340: le module profite des évènements émis par Skeletor lors de la création d'un utilisateur. Il regarde si l'utilisateur a une information Annudef permettant de déterminer son unité d'affectation. Le cas échéant, il fait automatiquement l'association entre l'utilisateur et cette unité.
