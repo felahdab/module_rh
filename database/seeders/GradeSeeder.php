@@ -4,6 +4,7 @@ namespace Modules\RH\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 
 use Modules\RH\Models\Grade;
 
@@ -210,7 +211,10 @@ class GradeSeeder extends Seeder
 		
 		foreach($records_to_seed as $record)
 		{
-			Grade::create($record);
+			Grade::firstOrCreate(
+				["uuid" => $record['uuid']],
+				Arr::except($record, "uuid")
+			);
 		}        
     }
 }

@@ -4,6 +4,7 @@ namespace Modules\RH\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 
 use Modules\RH\Models\Brevet;
 
@@ -51,7 +52,10 @@ class BrevetSeeder extends Seeder
 
 		foreach($records_to_seed as $record)
 		{
-			Brevet::create($record);
+			Brevet::firstOrCreate(
+				["uuid" => $record['uuid'] ],
+				Arr::except($record, "uuid")
+			);
 		} 
     }
 }

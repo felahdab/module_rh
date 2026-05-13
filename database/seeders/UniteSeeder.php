@@ -186,8 +186,8 @@ class UniteSeeder extends Seeder
         foreach ($records as $record) {
             $unite = Unite::firstOrCreate(
                 [
-                    'uuid' => $record['uuid'],
-                
+                    'uuid' => $record['uuid']
+                ],[
                     'libelle_court' => $record['libelle_court'],
                     'libelle_long' => $record['libelle_long'],
                     'libannudef' => $record['libannudef'],

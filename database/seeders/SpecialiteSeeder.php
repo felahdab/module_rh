@@ -4,6 +4,7 @@ namespace Modules\RH\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 
 use Modules\RH\Models\Specialite;
 
@@ -1051,7 +1052,10 @@ class SpecialiteSeeder extends Seeder
 
         foreach ($records_to_seed as $record)
         {
-            Specialite::create($record);
+            Specialite::firstOrCreate(
+              ["uuid" => $record["uuid"]],
+              $record
+            );
         }
     }
 }
