@@ -8,6 +8,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Config;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 use Filament\Http\Middleware\Authenticate;
@@ -34,6 +35,7 @@ use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
 use App\Filament\Pages\UserPreferences;
 
 use Modules\RH\Filament\RH\Resources\MarinResource;
+use Nwidart\Modules\Facades\Module;
 
 class RHPanelProvider extends PanelProvider
 {
@@ -100,6 +102,8 @@ class RHPanelProvider extends PanelProvider
                 ->label('API')
                 ->icon('heroicon-m-cloud')
                 ->url(fn () => url(route('l5-swagger.default.api')), shouldOpenInNewTab: true),
+            'version' => MenuItem::make()
+                ->label($this->module . ' v' . Module::find($this->module)->get('version'))
         ];
 
         return $menuItems;
