@@ -1,3 +1,7 @@
+## 0.2.7 (May 13, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.6 –> 0.2.7
+- Ajustement des seeders pour permettre leur execution multiple lors du deploiement automatise.
+
 ## 0.2.6 (April 15, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.5 –> 0.2.6
 - Ajustement du chemin de publication de la documentation.
