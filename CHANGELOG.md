@@ -1,3 +1,7 @@
+## 0.2.8 (June 10, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.7 –> 0.2.8
+- Introduction de l'information sur la version du module dans le menu de l'utilisateur.
+
 ## 0.2.7 (May 13, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.6 –> 0.2.7
 - Ajustement des seeders pour permettre leur execution multiple lors du deploiement automatise.
