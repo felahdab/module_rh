@@ -35,7 +35,7 @@ class MarinController extends Controller
                'filter[nid]' => 'string',
           ]);
                
-          $users = QueryBuilder::for(Marin::select(["id", "nom", "prenom", "nid"]))
+          $users = QueryBuilder::for(Marin::select(["nom", "prenom", "uuid", "nid"]))
                ->allowedFilters('nid')
                ->get();
 
