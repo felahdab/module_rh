@@ -84,4 +84,9 @@ class User extends BaseModel
 		$query->whereIn('id', $unite->users->pluck('id'));
 	}
 
+	public static function fromCurrentAuthUser(BaseModel $user): User
+	{
+		return cast_as_eloquent_descendant($user, static::class);
+	}
+
 }
