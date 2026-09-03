@@ -1,3 +1,10 @@
+## 0.2.9 (September 03, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.8 –> 0.2.9
+- Merge branch 'latest'
+- Implement le helper du modele User pour deriver du User de Skeletor.
+- Désactivation du endpoint de creation des marins.
+- Implements artifact #691744: rajoute le uuid du marin dans le retour de l'API
+
 ## 0.2.8 (June 10, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.7 –> 0.2.8
 - Introduction de l'information sur la version du module dans le menu de l'utilisateur.
