@@ -13,7 +13,7 @@ class RHDatabaseSeeder extends Seeder
     {
         $this->call([
             SettingSeeder::class,
-            PermissionSeeder::class,
+            PermissionsSeeder::class,
             GradeSeeder::class,
             BrevetSeeder::class,
             SpecialiteSeeder::class,
