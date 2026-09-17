@@ -7,6 +7,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Modules\RH\Events;
 use Modules\RH\Listeners;
 use App\Events\UnUtilisateurLocalAEteCreeEvent;
+use App\Events\RabbitMQMessageReceivedEvent;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -20,6 +21,11 @@ class EventServiceProvider extends ServiceProvider
         UnUtilisateurLocalAEteCreeEvent::class => [
             Listeners\AssocierUneUniteAUnNouvelUtilisateur::class,
             Listeners\EssayerDeCreerUnMarinAssocieAUnNouvelUtilisateur::class
+        ],
+        RabbitMQMessageReceivedEvent::class => [
+            Listeners\RequestUniteUpdateListener::class,
+            Listeners\RequestUniteUpdateResponseListener::class,
+            Listeners\UniteDefinitionListener::class
         ]
     ];
 }
