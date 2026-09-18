@@ -14,6 +14,7 @@ use App\Filament\PanelRegistry\ModuleDefinedPreferedPagesRegistry;
 
 use Modules\RH\Console\ResetTestDatabase;
 use Modules\RH\Console\RequestUniteUpdate;
+use Modules\RH\Console\VerifierDonneesIndividuelles;
 
 use Modules\RH\Models;
 use Modules\RH\Policies;
@@ -117,7 +118,8 @@ class RHServiceProvider extends ServiceProvider
     {
         $this->commands([
             ResetTestDatabase::class,
-            RequestUniteUpdate::class
+            RequestUniteUpdate::class,
+            VerifierDonneesIndividuelles::class
         ]);
     }
 
