@@ -1,3 +1,12 @@
+## 0.2.10 (September 18, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.9 –> 0.2.10
+- Merge branch 'tuleap-948951-implemente-une-verification-de-la-coherence-entre-branche-annudef-de-l-utilisateur-et-ou-du-marin-et-unite-d-affectation' into develop
+- Implements artifact #94895: implemente une commande artisan pour vérifier la qualité des données RH individuelles (unité d'affectation vs branche dans l'Annudef)
+- Implements artifact #962552: le module RH peut envoyer une demande de mise à jour des unités à une instance distante. Celle-ci compare sa liste d'unités avec celle de l'instance, et envoie un bilan (unités identiques, différentes, manquantes et inconnues) en retour. Pour chaque unité manquante ou différente, l'instance de référence envoie également un message de définition. L'instance locale met à jour ou créé les lignes correspondantes.
+- Renommage du seeder des permissions pour correspondre à l'attendu de la commande skeletor:seed-permissions
+- Modifier le middleware d'authentification du panneau du module pour renvoyer l utilisateur vers le login
+- Implements artifact #951395: le seeder des specialites ne contient plus d'id explicite et laisse ça à la base.
+
 ## 0.2.9 (September 03, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.8 –> 0.2.9
 - Merge branch 'latest'
