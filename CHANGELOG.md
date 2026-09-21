@@ -1,3 +1,8 @@
+## 0.2.11 (September 21, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.10 –> 0.2.11
+- Merge branch 'tuleap-948951-implemente-une-verification-de-la-coherence-entre-branche-annudef-de-l-utilisateur-et-ou-du-marin-et-unite-d-affectation' into develop
+- Ajustement de la commande de vérification des données RH pour faciliter son exploitation.
+
 ## 0.2.10 (September 18, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.9 –> 0.2.10
 - Merge branch 'tuleap-948951-implemente-une-verification-de-la-coherence-entre-branche-annudef-de-l-utilisateur-et-ou-du-marin-et-unite-d-affectation' into develop

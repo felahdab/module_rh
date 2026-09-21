@@ -10,5 +10,5 @@
         "Modules\\RH\\Providers\\EventServiceProvider"
     ],
     "files": [],
-    "version" : "0.2.9"
+    "version" : "0.2.11"
 }
