@@ -70,6 +70,7 @@ class VerifierDonneesIndividuelles extends Command
 
     public function verifier($verification)
     {
+        $this->line("##################################################");
         $class = $verification::class;
         $email = $verification->email;
             
@@ -78,7 +79,7 @@ class VerifierDonneesIndividuelles extends Command
         $fiche_annudef = AnnudefAjaxRequestService::getUserAnnudefEntryByEmail($email);
         if ($fiche_annudef == null)
         {
-            $this->warn("Utilisateur inconnu dans Annudef. Abandon.");
+            $this->warn("Utilisateur inconnu dans Annudef. On passe au suivant.");
             return;
         }
 
@@ -91,18 +92,38 @@ class VerifierDonneesIndividuelles extends Command
             $unite_calculee = AnnudefUniteService::getUniteFromAnnudefBranch($fiche_annudef["unite"]);
             if ($unite_calculee == null )
             {
-                $this->warn("Vous n'avez pas corrigé l'unité identifiée par cette branche Annudef. Arrêt du traitement de cet email.");
+                $this->warn("Vous n'avez pas corrigé l'unité identifiée par la branche Annudef de cet email. On passe au suivant.");
                 return;
             }
         }
 
-        $this->table(["Email", "Unité Annudef", "Unité actuelle"], [[$verification->email, $unite_calculee->libelle_long, $verification->getUnite()?->libelle_long ]]);
+        //$this->table(["Email", "Unité Annudef", "Unité actuelle"], [[$verification->email, $unite_calculee->libelle_long, $verification->getUnite()?->libelle_long ]]);
 
         if ($verification->getUnite()?->id != $unite_calculee->id)
         {
             $this->gerer_discordance_des_unites($verification, $fiche_annudef, $unite_calculee);
         }
 
+    }
+
+    public function get_options_from_annudef_branch($branche_annudef)
+    {
+        /**
+         * Cette méthode découpe la branche Annudef à chaque / et renvoie la liste des séquences pourvant
+         * être construites avec les morceaux obtenus. Cela permet à l'utilisateur de sélectionner la
+         * partie de la branche Annudef renvoyée par la requête qui correspond à l'unité dans son ensemble.
+         * Cela évite des saisies à l'utilisateur.
+         */
+        $branche_annudef_pieces =Str::of($branche_annudef)->explode("/");
+        $options = [];
+        while (! $branche_annudef_pieces->count() == 0)
+        {
+            $recherche = (string) $branche_annudef_pieces->join("/");
+            $options[] = $recherche;
+            $branche_annudef_pieces->pop();
+        }
+
+        return $options;
     }
 
     public function gerer_unite_inconnue($branche_annudef)
@@ -118,6 +139,13 @@ class VerifierDonneesIndividuelles extends Command
         if ($unite_existante)
         {
             $this->info($unite_existante);
+
+            $options = $this->get_options_from_annudef_branch($branche_annudef);
+            $libannudef = $this->choice("Quelle partie de la branche Annudef identifie cette unité ?", $options);
+            if ($this->confirm("Mettre à jour la fiche de {$unite_existante->libelle_long} avec la branche Annudef {$libannudef} ?", true)){
+                $unite_existante->libannudef = $libannudef;
+                $unite_existante->save();    
+            }
         }
         else
         {
@@ -132,17 +160,8 @@ class VerifierDonneesIndividuelles extends Command
                     $libelle_long = $this->ask("Nom de l'unité", $libelle_long);
                     $libelle_court = $this->ask("Nom abrégé de l'unité (trigramme)", $libelle_court);
 
-                    $branche_annudef_pieces =Str::of($branche_annudef)->explode("/");
-                    $options = [];
-                    while (! $branche_annudef_pieces->count() == 0)
-                    {
-                        $recherche = (string) $branche_annudef_pieces->join("/");
-                        $options[] = $recherche;
-                        $branche_annudef_pieces->pop();
-                    }
-
-                    //$libannudef= $this->ask("Quelle partie de la branche Annudef identifie cette unité ?", $libannudef);
-                    $libannudef= $this->choice("Quelle partie de la branche Annudef identifie cette unité ?", $options);
+                    $options = $this->get_options_from_annudef_branch($branche_annudef);
+                    $libannudef = $this->choice("Quelle partie de la branche Annudef identifie cette unité ?", $options);
 
                     if ($this->confirm("Est-ce que les informations saisies sont correctes ?"))
                     {
@@ -162,9 +181,9 @@ class VerifierDonneesIndividuelles extends Command
 
     public function gerer_discordance_des_unites($verification, $fiche_annudef, $unite_calculee)
     {
-        $this->table(["email",  "Unite Annudef", "Unite actuelle"], [[$verification->email, $unite_calculee->libelle_long, $verification->getUnite()?->libelle_long ]]);
+        $this->table(["email",  "Unite actuelle", "Unite Annudef"], [[$verification->email, $verification->getUnite()?->libelle_long, $unite_calculee->libelle_long ]]);
         
-        if ($this->confirm("Voulez-vous corriger la fiche de l'utilisation ou du marin pour lui attribuer l'unité extraite d'Annudef ?"))
+        if ($this->confirm("Voulez-vous corriger la fiche de l'utilisateur ou du marin pour lui attribuer l'unité extraite d'Annudef ?", true))
         {
             $verification->setUnite($unite_calculee);
         }
