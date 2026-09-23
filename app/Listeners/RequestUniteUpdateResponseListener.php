@@ -42,9 +42,21 @@ class RequestUniteUpdateResponseListener
             $response = json_decode($body, true);
 
             $unites_identiques = Arr::get($response, "unites_identiques", []);
+            $nb_unites_identiques = count($unites_identiques);
+
             $unites_libelle_different = Arr::get($response, "unites_libelle_different", []);
+            $nb_unites_libelle_different = count($unites_libelle_different);
+
             $unites_inconnues = Arr::get($response, "unites_inconnues", []);
+            $nb_unites_inconnues = count($unites_inconnues);
+
             $unites_manquantes = Arr::get($response, "unites_manquantes", []);
+            $nb_unites_manquantes = count($unites_manquantes);
+
+            logger()->info("rh_unite_update_response: nombre unites identiques {$nb_unites_identiques}");
+            logger()->info("rh_unite_update_response: nombre unites differentes {$nb_unites_libelle_different}");
+            logger()->info("rh_unite_update_response: nombre unites inconnues {$nb_unites_inconnues}");
+            logger()->info("rh_unite_update_response: nombre unites manquantes {$nb_unites_manquantes}");
 
 
         } catch (Exception $e) {
