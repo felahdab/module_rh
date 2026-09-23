@@ -1,3 +1,7 @@
+## 0.2.12 (September 23, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.11 –> 0.2.12
+- Ajout de log pour informer l'utilisateur sur le nombre d unites identiques, manquantes, differentes et manquantes. Desactivation du seeder des unités: à partir de maintenant, les instances de production seront vierges. Mais elles pourront être initialisées via RabbitMQ à partir d'une instance de référnence.
+
 ## 0.2.11 (September 21, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.10 –> 0.2.11
 - Merge branch 'tuleap-948951-implemente-une-verification-de-la-coherence-entre-branche-annudef-de-l-utilisateur-et-ou-du-marin-et-unite-d-affectation' into develop
