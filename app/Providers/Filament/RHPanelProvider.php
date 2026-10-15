@@ -11,7 +11,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Config;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-use App\Http\Middleware\FilamentAuthenticate;
+use App\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
@@ -80,7 +80,7 @@ class RHPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                FilamentAuthenticate::class,
+                Authenticate::class,
             ])
             // Menu Side Bar Haut
             ->topNavigation()
