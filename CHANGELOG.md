@@ -1,3 +1,9 @@
+## 0.2.13 (November 02, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.12 –> 0.2.13
+- Merge branch 'master' into develop
+- BugBounty rémédiation https://forge.intradef.gouv.fr/plugins/tracker/?aid=988521 retrait du endpoint API marins qui ne sert à rien.
+- BugBounty Rémédiation https://forge.intradef.gouv.fr/plugins/tracker/?aid=988574 correction middleware du panneau Filament pour protéger la route livewire
+
 ## 0.2.12 (September 23, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 0.2.11 –> 0.2.12
 - Ajout de log pour informer l'utilisateur sur le nombre d unites identiques, manquantes, differentes et manquantes. Desactivation du seeder des unités: à partir de maintenant, les instances de production seront vierges. Mais elles pourront être initialisées via RabbitMQ à partir d'une instance de référnence.
